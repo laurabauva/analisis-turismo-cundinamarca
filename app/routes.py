@@ -1,4 +1,4 @@
-import app
+﻿import app
 from flask import Blueprint, render_template
 from .poblacional import obtener_analisis_poblacional
 from app.logic.relacional import obtener_matriz_relacional_categoria_municipio, obtener_diversidad_por_municipio
@@ -17,3 +17,6 @@ def api_relacional():
         "matriz": datos_matriz,
         "diversidad": datos_diversidad
     }
+@main.route('/relacional')
+def vista_relacional():
+    return render_template('relacional.html')

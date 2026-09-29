@@ -15,7 +15,7 @@ def cargar_y_limpiar_datos():
         if files:
             ruta = os.path.join(os.path.dirname(ruta), files[0])
             
-    df = pd.read_csv(ruta)
+    df = pd.read_csv('data/rnt_cundinamarca.csv', encoding='latin-1',sep=None, engine='python')
     
     # Eliminación de columnas con datos personales o sensibles según el README
     cols_sensibles = ['RAZON_SOCIAL', 'NIT', 'CODIGO_RNT', 'razon_social', 'nit', 'codigo_rnt']
