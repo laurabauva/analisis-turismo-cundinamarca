@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimensión Relacional - Turismo Cundinamarca</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4">Análisis Dimensión Relacional</h1>
+        <p class="lead">Relación entre categorías de servicios turísticos y municipios en Cundinamarca.</p>
+        
+        <div class="card shadow-sm p-4 mt-4">
+            <h3>Datos de Diversidad por Municipio</h3>
+            <div id="loading" class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <ul id="lista-diversidad" class="list-group list-group-flush mt-3"></ul>
+        </div>
+    </div>
+
+    <script>
+        fetch('/api/relacional')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                const lista = document.getElementById('lista-diversidad');
+                data.diversidad.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    li.innerHTML = `<strong>${item.municipio}</strong> <span class="badge bg-primary rounded-pill">${item.variedad_servicios} servicios</span>`;
+                    lista.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error al cargar la API:', error));
+    </script>
+</body>
+</html>
