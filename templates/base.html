@@ -1,21 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Turismo Cundinamarca{% endblock %}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>{% block title %}Turismo en Cundinamarca{% endblock %}</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+     <!-- Estilos del proyecto -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/estilo.css') }}">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Estilos propios de cada dimensión -->
     {% block head %}{% endblock %}
+
+    <!-- Estilos comunes de la navegación lateral (botones ← i →) -->
+    {% block head_navegacion %}
+    <style>
+        .nav-lateral {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1050;
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+            border: none;
+
+            color: #fff;
+            font-size: 22px;
+            font-weight: bold;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .2);
+            transition: transform .2s ease, background .2s ease;
+            text-decoration: none;
+        }
+
+        .nav-lateral:hover {
+            transform: translateY(-50%) scale(1.1);
+            color: #fff;
+        }
+
+        .nav-lateral-izq { left: 20px; }
+        .nav-lateral-der { right: 20px; }
+
+        @media (max-width: 768px) {
+            .nav-lateral { width: 40px; height: 40px; font-size: 18px; }
+            .nav-lateral-izq { left: 8px; }
+            .nav-lateral-der { right: 8px; }
+            
+        }
+    </style>
+    {% endblock %}
 </head>
+
 
 <body class="bg-light">
 
+<!-- ============================================
+     NAVBAR PRINCIPAL
+     ============================================ -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
 
-        <a class="navbar-brand" href="/">Turismo en Cundinamarca</a>
+        <a class="navbar-brand" href="/">
+            Turismo en Cundinamarca
+        </a>
 
         <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#menu">
@@ -30,15 +95,31 @@
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#"
+                       role="button" data-bs-toggle="dropdown">
                         Análisis de datos
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/poblacional">Dimensión poblacional</a></li>
-                        <li><a class="dropdown-item" href="/territorial">Dimensión territorial</a></li>
-                        <li><a class="dropdown-item" href="/temporal">Dimensión temporal</a></li>
-                        <li><a class="dropdown-item" href="/multivariada">Dimensión relacional y multivariada</a></li>
+                        <li>
+                            <a class="dropdown-item" href="/poblacional">
+                                Dimensión poblacional
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/territorial">
+                                Dimensión territorial
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/temporal">
+                                Dimensión temporal
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/multivariada">
+                                Dimensión relacional y multivariada
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -48,13 +129,36 @@
     </div>
 </nav>
 
+
+<!-- ============================================
+     CONTENIDO PRINCIPAL
+     ============================================ -->
 <main class="container py-5">
     {% block content %}{% endblock %}
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-{% block scripts %}{% endblock %}   <!-- ← ESTO ES LO QUE FALTA -->
-</body>
 
+<!-- ============================================
+     NAVEGACIÓN LATERAL ENTRE DIMENSIONES
+     (cada plantilla define sus botones ← i →)
+     ============================================ -->
+{% block navegacion_dimension %}{% endblock %}
+
+
+<!-- ============================================
+     MODAL DE INFORMACIÓN DE LA DIMENSIÓN ACTUAL
+     (cada plantilla define su propio modal)
+     ============================================ -->
+{% block modal_info %}{% endblock %}
+
+
+<!-- ============================================
+     SCRIPTS
+     ============================================ -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block scripts %}{% endblock %}
+
+</body>
 
 </html>

@@ -8,6 +8,7 @@
     .grafica-departamento { height: 480px; }
     .grafica-cruce        { height: 520px; }
     .contenedor-grafica   { position: relative; width: 100%; }
+
     @media (max-width: 768px) {
         .grafica-municipios { height: 750px; }
         .grafica-departamento,
@@ -15,6 +16,92 @@
     }
 </style>
 {% endblock %}
+
+
+<!-- ============================================
+     NAVEGACIÓN LATERAL - TERRITORIAL (verde)
+     ============================================ -->
+{% block navegacion_dimension %}
+
+    <a href="/poblacional"
+       class="nav-lateral nav-lateral-izq"
+       style="background:#198754;"
+       title="Ir a: Dimensión poblacional">
+        &#8592;
+    </a>
+
+    <button type="button"
+            class="nav-info"
+            style="background:#198754;"
+            data-bs-toggle="modal"
+            data-bs-target="#modalDimension"
+            title="Información de esta dimensión">
+        i
+    </button>
+
+    <a href="/temporal"
+       class="nav-lateral nav-lateral-der"
+       style="background:#198754;"
+       title="Ir a: Dimensión temporal">
+        &#8594;
+    </a>
+
+{% endblock %}
+
+
+<!-- ============================================
+     MODAL DE INFORMACIÓN
+     ============================================ -->
+{% block modal_info %}
+<div class="modal fade" id="modalDimension" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Dimensión territorial</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Pregunta:</strong>
+                    ¿Cómo se distribuye la población turística registrada
+                    y sus principales características entre los territorios
+                    disponibles?
+                </p>
+
+                <p><strong>Variables utilizadas:</strong></p>
+                <ul>
+                    <li><code>DEPARTAMENTO</code></li>
+                    <li><code>MUNICIPIO</code></li>
+                    <li><code>CATEGORIA</code></li>
+                    <li><code>CODIGO_MUNICIPIO</code></li>
+                </ul>
+
+                <p><strong>Indicadores:</strong></p>
+                <ul>
+                    <li>Municipio líder por cantidad de registros</li>
+                    <li>Concentración del top 3 de municipios</li>
+                    <li>Total de prestadores analizados</li>
+                </ul>
+
+                <p class="mb-0"><strong>Filtros disponibles:</strong>
+                    Departamento y categoría turística.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 
 {% block content %}
 
@@ -71,9 +158,7 @@
             </div>
 
             <div class="col-md-2 d-flex align-items-end">
-                <button class="btn btn-primary w-100" type="submit">
-                    Aplicar
-                </button>
+                <button class="btn btn-success w-100" type="submit">Aplicar</button>
             </div>
 
         </form>
@@ -82,7 +167,6 @@
 
 <!-- INDICADORES -->
 <div class="row g-4 mb-5">
-
     <div class="col-md-4">
         <div class="card shadow-sm h-100">
             <div class="card-body text-center">
@@ -90,8 +174,7 @@
                 <h5 class="fw-bold mt-2">{{ datos.municipio_top }}</h5>
                 <p class="mb-0">
                     {{ "{:,}".format(datos.cantidad_municipio_top).replace(",", ".") }}
-                    registros
-                    ({{ datos.porcentaje_municipio_top }}%)
+                    registros ({{ datos.porcentaje_municipio_top }}%)
                 </p>
             </div>
         </div>
@@ -118,12 +201,10 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <!-- VISUALIZACIONES -->
 <div class="row g-4">
-
     <div class="col-12">
         <div class="card shadow-sm">
             <div class="card-body">
@@ -144,8 +225,7 @@
             <div class="card-body">
                 <h4>Participación por departamento</h4>
                 <p class="text-muted">
-                    Comparación del peso relativo de Bogotá y
-                    Cundinamarca dentro de la población analizada.
+                    Comparación del peso relativo de Bogotá y Cundinamarca.
                 </p>
                 <div class="contenedor-grafica grafica-departamento">
                     <canvas id="departamentoChart"></canvas>
@@ -168,7 +248,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <!-- CONOCIMIENTOS EVIDENTES -->
@@ -179,13 +258,10 @@
         <div class="mt-4">
             <h5>1. Fuerte concentración territorial</h5>
             <p>
-                El municipio de
-                <strong>{{ datos.municipio_top }}</strong>
-                concentra
-                <strong>{{ datos.porcentaje_municipio_top }}%</strong>
-                de los registros. Los tres municipios con mayor
-                presencia agrupan el
-                <strong>{{ datos.concentracion_top3 }}%</strong>.
+                El municipio de <strong>{{ datos.municipio_top }}</strong>
+                concentra <strong>{{ datos.porcentaje_municipio_top }}%</strong>
+                de los registros. Los tres municipios con mayor presencia
+                agrupan el <strong>{{ datos.concentracion_top3 }}%</strong>.
             </p>
         </div>
 
@@ -193,8 +269,7 @@
             <h5>2. Predominio de Bogotá frente a Cundinamarca</h5>
             <p>
                 La participación por departamento muestra una brecha
-                marcada entre Bogotá D.C. y los municipios de
-                Cundinamarca.
+                marcada entre Bogotá D.C. y los municipios de Cundinamarca.
             </p>
         </div>
 
@@ -235,6 +310,7 @@
 
 {% endblock %}
 
+
 {% block scripts %}
 <script>
     const municipios = {{ datos.municipios_grafica | tojson }};
@@ -243,15 +319,11 @@
     const cruceCat   = {{ datos.categorias_unicas | tojson }};
     const cruceData  = {{ datos.datos_cruce | tojson }};
 
-    /* GRÁFICA 1 – Top municipios */
     new Chart(document.getElementById("municipiosChart"), {
         type: "bar",
         data: {
             labels: municipios.map(x => x.municipio),
-            datasets: [{
-                label: "Registros",
-                data: municipios.map(x => x.cantidad)
-            }]
+            datasets: [{ label: "Registros", data: municipios.map(x => x.cantidad) }]
         },
         options: {
             indexAxis: "y",
@@ -265,30 +337,24 @@
         }
     });
 
-    /* GRÁFICA 2 – Participación por departamento */
     new Chart(document.getElementById("departamentoChart"), {
         type: "doughnut",
         data: {
             labels: deptos.map(x => x.departamento),
-            datasets: [{
-                data: deptos.map(x => x.porcentaje)
-            }]
+            datasets: [{ data: deptos.map(x => x.porcentaje) }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
                 legend: { position: "bottom" },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => ctx.label + ": " + ctx.parsed.toFixed(2) + "%"
-                    }
-                }
+                tooltip: { callbacks: {
+                    label: ctx => ctx.label + ": " + ctx.parsed.toFixed(2) + "%"
+                }}
             }
         }
     });
 
-    /* GRÁFICA 3 – Cruce municipio × categoría */
     const colores = [
         "#0d6efd", "#198754", "#ffc107", "#dc3545",
         "#6f42c1", "#20c997", "#fd7e14", "#6610f2"

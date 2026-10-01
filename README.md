@@ -25,6 +25,6 @@
 
    ## Integrantes
    1. Laura Bautista: dimensión poblacional y administración del repositorio
-   2. Nicolas Guitierrez: dimensión territorial y configuración de Flask
+   2. Nicolás Gutiérrez: dimensión territorial y configuración de Flask
    3. Leonardo Moscoso: dimensión temporal y publicación
    4. Andrés Pineda: dimensión relacional y informe
