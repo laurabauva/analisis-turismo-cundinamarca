@@ -385,6 +385,27 @@ h1 { font-weight: 700; }
     font-weight: 600;
 }
 
+.dimensions-grid .card-dimension .btn {
+    background: #fff !important;
+    border-width: 2px;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, .14);
+    font-weight: 700;
+    text-shadow: none;
+}
+
+.dimensions-grid .node-poblacional .btn:hover,
+.dimensions-grid .node-territorial .btn:hover,
+.dimensions-grid .node-temporal .btn:hover,
+.dimensions-grid .node-multivariada .btn:hover {
+    color: #fff !important;
+    box-shadow: 0 5px 12px rgba(15, 23, 42, .2);
+}
+
+.dimensions-grid .node-poblacional .btn:hover { background: #0d6efd !important; }
+.dimensions-grid .node-territorial .btn:hover { background: #198754 !important; }
+.dimensions-grid .node-temporal .btn:hover { background: #d89f16 !important; }
+.dimensions-grid .node-multivariada .btn:hover { background: #dc3545 !important; }
+
 
 /* --- Tabla de variables --- */
 .panel-dataset {
@@ -765,6 +786,10 @@ h1 { font-weight: 700; }
     align-items: center;
 }
 
+.dimensions-grid .dimension-node:hover {
+    z-index: 20;
+}
+
 /* Orden: 01 arriba-izq · 02 arriba-der · 03 abajo-izq · 04 abajo-der */
 .node-poblacional  { grid-column: 1; grid-row: 1; }
 .node-territorial  { grid-column: 2; grid-row: 1; }
@@ -814,6 +839,16 @@ h1 { font-weight: 700; }
     transform: translateZ(20px);
     backface-visibility: hidden;
     padding: 2rem 2.2rem;
+}
+
+.dimensions-grid .card-dimension .btn {
+    position: relative;
+    z-index: 10;
+    display: inline-block;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateZ(24px);
 }
 
 .dimensions-grid .card-dimension .card-text {
@@ -1019,6 +1054,18 @@ h1 { font-weight: 700; }
    ============================================================ */
 .territorial-dashboard {
     color: #183b38;
+    background:
+        radial-gradient(ellipse at 15% 8%, rgba(25, 135, 84, .10) 0 22%, transparent 45%),
+        radial-gradient(ellipse at 88% 12%, rgba(229, 173, 69, .12) 0 20%, transparent 42%),
+        radial-gradient(ellipse at 50% 100%, rgba(11, 79, 74, .09) 0 28%, transparent 55%),
+        linear-gradient(180deg, #eef4f0 0%, #e8efea 55%, #e4ece6 100%);
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: calc(50vw - 50%);
+    padding-right: calc(50vw - 50%);
+    padding-top: 1.5rem;
+    padding-bottom: 2.5rem;
+    border-radius: 0;
 }
 
 .territorial-intro {
@@ -1171,6 +1218,74 @@ h1 { font-weight: 700; }
 .territorial-kpi.kpi-concentration { border-top-color: #e5ad45; }
 .territorial-kpi.kpi-low { border-top-color: #b96a4b; }
 
+.territorial-reading-guide {
+    background: rgba(255, 255, 255, .86);
+    border: 1px solid rgba(11, 79, 74, .14);
+    border-radius: .85rem;
+    padding: 1.3rem;
+    margin-bottom: 2.2rem;
+    box-shadow: 0 10px 22px rgba(11, 79, 74, .06);
+}
+
+.reading-guide-title {
+    display: grid;
+    grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr);
+    column-gap: 1.5rem;
+    align-items: end;
+    border-bottom: 1px solid rgba(11, 79, 74, .13);
+    padding-bottom: .9rem;
+}
+
+.reading-guide-title .territorial-kicker { grid-column: 1 / -1; }
+
+.reading-guide-title h2 {
+    color: #0b4f4a;
+    font-size: 1.35rem;
+    margin: 0;
+}
+
+.reading-guide-title p {
+    color: #52716d;
+    font-size: .9rem;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.reading-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 1rem;
+}
+
+.reading-guide-grid article {
+    border-left: 3px solid #2f8061;
+    padding-left: .8rem;
+}
+
+.reading-guide-grid article:nth-child(2) { border-left-color: #e5ad45; }
+.reading-guide-grid article:nth-child(3) { border-left-color: #b96a4b; }
+
+.reading-guide-grid article > span {
+    color: #8a641b;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+}
+
+.reading-guide-grid h3 {
+    color: #183b38;
+    font-size: .98rem;
+    margin: .35rem 0;
+}
+
+.reading-guide-grid p {
+    color: #5f7773;
+    font-size: .84rem;
+    line-height: 1.45;
+    margin: 0;
+}
+
 .territorial-section-heading {
     display: flex;
     align-items: end;
@@ -1287,3 +1402,111 @@ h1 { font-weight: 700; }
 }
 
 .territorial-note p { font-size: .9rem; }
+
+.territorial-filter-panel .btn-link {
+    color: #52716d;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.territorial-filter-panel .btn-link:hover {
+    color: #0b4f4a;
+    text-decoration: underline;
+}
+
+.territorial-table-card {
+    background: rgba(255, 255, 255, .94);
+    border: 1px solid rgba(11, 79, 74, .15);
+    border-radius: .85rem;
+    padding: 1.25rem;
+    margin-top: 2rem;
+    box-shadow: 0 10px 24px rgba(11, 79, 74, .07);
+}
+
+.table-card-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .8rem;
+}
+
+.table-card-heading h2 {
+    color: #0b4f4a;
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.table-card-heading p {
+    color: #6a817d;
+    font-size: .82rem;
+    margin: 0;
+    max-width: 360px;
+    text-align: right;
+}
+
+.territorial-summary-table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0 3px;
+}
+
+.territorial-summary-table th {
+    background: #0b4f4a;
+    color: #fff;
+    border: 0;
+    font-size: .72rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.territorial-summary-table td {
+    background: #f3f8f5;
+    border: 0;
+    color: #315d58;
+}
+
+.territorial-summary-table tbody tr:hover td { background: #e4f0e9; }
+
+.category-pill {
+    display: inline-block;
+    background: #e8f0dc;
+    border: 1px solid #c8dca9;
+    border-radius: .35rem;
+    color: #426d16;
+    font-size: .76rem;
+    font-weight: 700;
+    padding: .2rem .45rem;
+}
+
+.territorial-empty-state {
+    background: rgba(255, 255, 255, .92);
+    border: 1px dashed rgba(11, 79, 74, .3);
+    border-radius: .85rem;
+    margin: 2rem 0;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+}
+
+.territorial-empty-state h2 {
+    color: #0b4f4a;
+    font-size: 1.35rem;
+    margin-bottom: .55rem;
+}
+
+.territorial-empty-state p {
+    color: #5f7773;
+    margin-bottom: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .territorial-dashboard {
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }
+    .reading-guide-title { display: block; }
+    .reading-guide-title p { margin-top: .6rem; }
+    .reading-guide-grid { grid-template-columns: 1fr; }
+    .table-card-heading { display: block; }
+    .table-card-heading p { margin-top: .5rem; text-align: left; }
+}

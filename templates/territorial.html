@@ -155,7 +155,8 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-territorial w-100" type="submit">Actualizar vista</button>
+                <button class="btn btn-territorial w-100" type="submit">Aplicar filtro</button>
+                <a class="btn btn-link btn-sm w-100 mt-1" href="/territorial">Limpiar filtros</a>
             </div>
         </form>
     </section>
@@ -169,7 +170,7 @@
         <article class="territorial-kpi kpi-spread">
             <span>Municipios observados</span>
             <strong>{{ datos.territorios }}</strong>
-            <small>unidades territoriales con registros</small>
+            <small>promedio de {{ datos.promedio_municipio }} registros por municipio</small>
         </article>
         <article class="territorial-kpi kpi-concentration">
             <span>Concentración territorial</span>
@@ -179,10 +180,40 @@
         <article class="territorial-kpi kpi-low">
             <span>Menor presencia registrada</span>
             <strong>{{ datos.municipio_menor }}</strong>
-            <small>{{ datos.cantidad_municipio_menor }} registro(s)</small>
+            <small>{{ datos.cantidad_municipio_menor }} registro(s) · brecha de {{ datos.brecha_registros }}</small>
         </article>
     </section>
 
+    <section class="territorial-reading-guide">
+        <div class="reading-guide-title">
+            <span class="territorial-kicker">Cómo leer esta dimensión</span>
+            <h2>Del registro individual al comportamiento del territorio</h2>
+            <p>
+                Cada visualización responde una parte de la pregunta territorial:
+                primero localiza la oferta, después compara su peso y finalmente
+                muestra qué tipo de actividad caracteriza a cada zona.
+            </p>
+        </div>
+        <div class="reading-guide-grid">
+            <article>
+                <span>01</span>
+                <h3>Distribución</h3>
+                <p>El ranking de municipios permite reconocer dónde se acumulan los prestadores y qué zonas tienen una presencia menor.</p>
+            </article>
+            <article>
+                <span>02</span>
+                <h3>Participación</h3>
+                <p>El gráfico por departamento convierte los conteos en porcentajes para comparar territorios de distinto tamaño.</p>
+            </article>
+            <article>
+                <span>03</span>
+                <h3>Diferencias y perfiles</h3>
+                <p>El cruce con categoría revela concentraciones y posibles especializaciones de la oferta turística.</p>
+            </article>
+        </div>
+    </section>
+
+    {% if datos.hay_datos %}
     <section class="territorial-section-heading">
         <div>
             <span class="territorial-kicker">Lectura 01 · Distribución</span>
@@ -197,7 +228,7 @@
                 <span class="chart-index">01</span>
                 <h3>Municipios con mayor cantidad de prestadores</h3>
             </div>
-            <p>Top 10 de municipios ordenado por registros.</p>
+            <p>Ordena los diez territorios con más registros para identificar el núcleo y la periferia de la oferta.</p>
         </div>
         <div class="contenedor-grafica grafica-municipios"><canvas id="municipiosChart"></canvas></div>
     </section>
@@ -215,7 +246,7 @@
             <section class="territorial-chart-card h-100">
                 <div class="chart-card-header">
                     <div><span class="chart-index">02</span><h3>Participación por departamento</h3></div>
-                    <p>Distribución porcentual del conjunto filtrado.</p>
+                    <p>Permite comparar la participación relativa de cada departamento dentro del conjunto filtrado.</p>
                 </div>
                 <div class="contenedor-grafica grafica-departamento"><canvas id="departamentoChart"></canvas></div>
             </section>
@@ -224,13 +255,51 @@
             <section class="territorial-chart-card h-100">
                 <div class="chart-card-header">
                     <div><span class="chart-index">03</span><h3>Perfil turístico por municipio</h3></div>
-                    <p>El cruce de categorías permite detectar especializaciones.</p>
+                    <p>Las barras apiladas muestran diferencias de categoría y posibles perfiles de cada municipio.</p>
                 </div>
                 <div class="contenedor-grafica grafica-cruce"><canvas id="cruceChart"></canvas></div>
             </section>
         </div>
     </div>
 
+    <section class="territorial-table-card">
+        <div class="table-card-heading">
+            <div>
+                <span class="territorial-kicker">Detalle verificable</span>
+                <h2>Municipios con mayor presencia</h2>
+            </div>
+            <p>La tabla permite comprobar los valores del ranking y su categoría predominante.</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm align-middle territorial-summary-table">
+                <thead>
+                    <tr><th>#</th><th>Municipio</th><th>Registros</th><th>Participación</th><th>Categoría predominante</th></tr>
+                </thead>
+                <tbody>
+                    {% for municipio in datos.municipios_tabla %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td><strong>{{ municipio.municipio }}</strong></td>
+                        <td>{{ "{:,}".format(municipio.cantidad).replace(",", ".") }}</td>
+                        <td>{{ municipio.porcentaje }}%</td>
+                        <td><span class="category-pill">{{ municipio.categoria }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    {% else %}
+    <section class="territorial-empty-state">
+        <span class="territorial-kicker">Sin coincidencias</span>
+        <h2>No hay registros para esta combinación de filtros</h2>
+        <p>Prueba con otro departamento o categoría para volver a comparar territorios.</p>
+        <a class="btn btn-territorial" href="/territorial">Volver a la vista general</a>
+    </section>
+    {% endif %}
+
+    {% if datos.hay_datos %}
     <section class="territorial-findings">
         <div>
             <span class="territorial-kicker">Lectura 03 · Hallazgos</span>
@@ -254,6 +323,7 @@
             </article>
         </div>
     </section>
+    {% endif %}
 
     <aside class="territorial-note">
         <strong>Nota de interpretación</strong>
@@ -265,6 +335,7 @@
 
 
 {% block scripts %}
+{% if datos.hay_datos %}
 <script>
     const municipios = {{ datos.municipios_grafica | tojson }};
     const deptos     = {{ datos.deptos_grafica | tojson }};
@@ -334,4 +405,5 @@
         }
     });
 </script>
+{% endif %}
 {% endblock %}

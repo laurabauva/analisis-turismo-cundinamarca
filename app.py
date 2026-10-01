@@ -110,8 +110,15 @@ def territorial():
     municipio_top    = por_municipio.index[0] if total else '—'
     cantidad_top     = int(por_municipio.iloc[0]) if total else 0
     porcentaje_top   = round(cantidad_top / total * 100, 2) if total else 0
-    municipio_menor  = por_municipio.index[-1] if total else '—'
-    cantidad_menor   = int(por_municipio.iloc[-1]) if total else 0
+    cantidad_menor   = int(por_municipio.min()) if total else 0
+    municipios_menor = (
+        por_municipio[por_municipio == cantidad_menor].index.tolist()
+        if total else []
+    )
+    municipio_menor = municipios_menor[0] if municipios_menor else '—'
+    territorios = int(por_municipio.size)
+    promedio_municipio = round(total / territorios, 2) if territorios else 0
+    brecha_registros = cantidad_top - cantidad_menor
 
     top3             = int(por_municipio.head(3).sum())
     concentracion_top3 = round(top3 / total * 100, 2) if total else 0
@@ -135,6 +142,18 @@ def territorial():
     ]
 
     top8_muns = por_municipio.head(8).index.tolist()
+    municipios_tabla = []
+    for municipio, cantidad in top10.items():
+        categorias_municipio = (
+            df_filtrado[df_filtrado['MUNICIPIO'] == municipio]['CATEGORIA']
+            .value_counts()
+        )
+        municipios_tabla.append({
+            "municipio": municipio,
+            "cantidad": int(cantidad),
+            "porcentaje": round(cantidad / total * 100, 2) if total else 0,
+            "categoria": categorias_municipio.index[0] if len(categorias_municipio) else '—'
+        })
     cruce = (
         df_filtrado[df_filtrado['MUNICIPIO'].isin(top8_muns)]
         .groupby(['MUNICIPIO', 'CATEGORIA'])
@@ -165,7 +184,11 @@ def territorial():
         "porcentaje_municipio_top": porcentaje_top,
         "municipio_menor": municipio_menor,
         "cantidad_municipio_menor": cantidad_menor,
-        "territorios": int(por_municipio.size),
+        "municipios_menor": municipios_menor,
+        "territorios": territorios,
+        "promedio_municipio": promedio_municipio,
+        "brecha_registros": brecha_registros,
+        "hay_datos": bool(total),
         "concentracion_top3": concentracion_top3,
         "departamento_top": departamento_top,
         "porcentaje_depto_top": porcentaje_depto_top,
@@ -173,6 +196,7 @@ def territorial():
             k: round(v / total * 100, 2) for k, v in por_depto.items()
         } if total else {},
         "municipios_grafica": municipios_grafica,
+        "municipios_tabla": municipios_tabla,
         "deptos_grafica": deptos_grafica,
         "municipios_cruce": top8_muns,
         "categorias_unicas": categorias_unicas,
