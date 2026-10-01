@@ -1,125 +1,1289 @@
 /* ============================================
-   IDENTIDAD VISUAL DEL PROYECTO
-   Turismo en Cundinamarca
+   IDENTIDAD VISUAL - TURISMO EN CUNDINAMARCA
    ============================================ */
 
-/* --- Variables de color por dimensión --- */
 :root {
-    --color-poblacional: #0d6efd;   /* Azul    */
-    --color-territorial: #198754;   /* Verde   */
-    --color-temporal:    #ffc107;   /* Amarillo */
-    --color-multivariada:#dc3545;   /* Rojo    */
+    /* Paleta territorial */
+    --tierra:        #8B5E34;
+    --verde-natura:  #198754;
+    --azul-cielo:    #0d6efd;
+    --sol:           #ffc107;
+    --rojo-tierra:   #dc3545;
 
-    --color-texto-suave: #6c757d;
-    --sombra-card:       0 2px 8px rgba(0, 0, 0, .06);
-    --radio-card:        .75rem;
+    --color-texto:   #1f2937;
+    --color-suave:   #5f6b7a;
+    --fondo-app:     #f4f1ea;
+    --fondo-card:    #ffffff;
+    --borde-suave:   #e7e7e0;
+    --sombra-card:   0 10px 28px rgba(15, 23, 42, 0.08);
+    --radio-card:    1rem;
 }
 
 
-/* --- Tipografía general --- */
+/* --- Base --- */
 body {
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color: #212529;
+    background-color: #e8efea;
+    color: var(--color-texto);
 }
 
-
-/* --- Navbar --- */
-.navbar-brand {
-    font-weight: 600;
-    letter-spacing: .3px;
+main.container {
+    padding-top: 0 !important;
+    padding-bottom: 2.5rem;
 }
 
+h1, h2, h3, h4, h5 {
+    letter-spacing: .2px;
+    color: #1d2736;
+}
 
-/* --- Encabezados de cada dimensión --- */
-h1 {
+h1 { font-weight: 700; }
+
+
+/* --- Navbar temático --- */
+.navbar-turismo {
+    background: linear-gradient(90deg, #0b4f4a 0%, #176b5c 58%, #2f8061 100%) !important;
+    box-shadow: 0 4px 16px rgba(11, 79, 74, 0.24);
+}
+
+.navbar-turismo .navbar-brand {
     font-weight: 700;
+    letter-spacing: .4px;
+    display: flex;
+    align-items: center;
+    gap: .45rem;
 }
 
-h1 + .lead {
-    font-size: 1.05rem;
-    color: #495057;
+.navbar-turismo .nav-link {
+    font-weight: 500;
+    opacity: 0.95;
 }
 
-
-/* --- Cards de indicadores --- */
-.card {
-    border-radius: var(--radio-card);
-    box-shadow: var(--sombra-card);
-    border: none;
-}
-
-.card h6.text-muted {
-    text-transform: uppercase;
-    font-size: .75rem;
-    letter-spacing: .5px;
-    font-weight: 600;
-}
-
-.card h2,
-.card h5.fw-bold {
-    color: #212529;
+.navbar-turismo .nav-link:hover,
+.navbar-turismo .nav-link:focus {
+    opacity: 1;
 }
 
 
-/* --- Tablas dentro de cards --- */
-.card table {
-    margin-bottom: 0;
-}
-
-.card table code {
-    color: var(--color-poblacional);
-    background: #f1f3f5;
-    padding: .1rem .35rem;
-    border-radius: .25rem;
-}
-
-
-/* --- Contenedores de gráficas --- */
-.contenedor-grafica {
+/* --- Hero temático --- */
+.hero-turismo {
+    background-image: linear-gradient(105deg, rgba(7, 52, 49, 0.94), rgba(20, 91, 75, 0.76)),
+        radial-gradient(ellipse at 78% 25%, rgba(242, 198, 109, .52) 0 8%, transparent 27%),
+        linear-gradient(165deg, transparent 0 48%, rgba(46, 128, 97, .72) 49% 65%, rgba(11, 79, 74, .9) 66% 100%);
+    background-size: cover;
+    background-position: center 58%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 0;
+    border-left: 6px solid #e5ad45;
+    border-radius: 0 0 1.2rem 1.2rem;
+    padding: 2.1rem 2rem 1.8rem;
+    margin: 0 calc((100% - 100vw) / 2) 3rem !important;
+    padding-left: max(2rem, calc((100vw - 1140px) / 2 + 2rem));
+    padding-right: max(2rem, calc((100vw - 1140px) / 2 + 2rem));
     position: relative;
-    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 14px 30px rgba(7, 52, 49, 0.2);
+    z-index: 1;
+    contain: layout paint;
 }
 
+.hero-turismo::before {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: -30px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(229, 173, 69, .22), rgba(229, 173, 69, 0));
+    pointer-events: none;
+}
 
-/* --- Bloque "Conocimientos evidentes" --- */
-.card h3 {
+.hero-turismo > * {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-turismo h1 {
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.24);
+}
+
+.hero-turismo .lead {
+    color: #f4f8f5;
+}
+
+.hero-texto {
+    color: rgba(244, 248, 245, 0.9);
+}
+
+.hero-turismo .badge-hero {
+    background: rgba(229, 173, 69, .18);
+    border: 1px solid rgba(255, 220, 140, .5);
+    color: #fff3cc;
     font-weight: 700;
+    padding: .45rem .8rem;
+    border-radius: 2rem;
+    font-size: .78rem;
+    display: inline-block;
     margin-bottom: 1rem;
 }
 
-.card h5 {
-    font-weight: 600;
-    color: #343a40;
+
+/* --- Secciones y títulos --- */
+.summary-panel {
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 1.1rem;
+    padding: 1rem 1rem 0.25rem;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
 }
+
+.summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: .2rem .4rem 0;
+}
+
+.summary-kicker {
+    display: inline-block;
+    font-size: .68rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #1d4ed8;
+}
+
+.summary-header h3 {
+    color: #0f172a;
+    font-size: 1.2rem;
+}
+
+.insight-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.insight-item {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 0.9rem;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+.insight-item span {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.insight-item strong {
+    font-size: .97rem;
+    color: #0f172a;
+    line-height: 1.4;
+}
+
+.metric-card {
+    background: #fff;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-left: 5px solid #0d6efd;
+    border-radius: .9rem;
+    padding: 1rem .9rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 120px;
+    box-shadow: 0 8px 18px rgba(15,23,42,0.03);
+}
+
+.metric-card strong {
+    font-size: 2rem;
+    line-height: 1.1;
+    color: #0f172a;
+    margin: .3rem 0;
+}
+
+.metric-card small {
+    color: #475569;
+}
+
+.metric-label {
+    font-size: .7rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.metric-blue { border-left-color: #0d6efd; }
+.metric-green { border-left-color: #198754; }
+.metric-gold { border-left-color: #ffc107; }
+.metric-red { border-left-color: #dc3545; }
+
+.section-header {
+    margin-bottom: 1.25rem;
+    padding-left: .35rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+    padding-bottom: .7rem;
+}
+
+.section-header h3 {
+    color: #0f172a;
+}
+
+
+/* --- Cards genéricas (sombra por capa ::after, sin repaint) --- */
+.card {
+    position: relative;
+    border-radius: var(--radio-card);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: var(--fondo-card);
+    transition: transform .2s ease;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.08);
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+
+/* --- Cards de "dataset" --- */
+.card-dato {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.card-dato .icono-dato {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(13,110,253,.08);
+    color: var(--azul-cielo);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: .7rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.card-dato h5 {
+    font-weight: 700;
+    margin-bottom: .15rem;
+}
+
+
+/* --- Cards de dimensión (base) --- */
+.card-dimension {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-dimension::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.13;
+    pointer-events: none;
+}
+
+.card-dimension .card-body {
+    position: relative;
+    z-index: 1;
+}
+
+.card-dimension .icono-dim {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: #fff;
+    margin-bottom: .85rem;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+}
+
+.card-dimension.poblacional::before {
+    background-image: linear-gradient(135deg, rgba(13, 110, 253, .18), rgba(255, 255, 255, .52));
+}
+.card-dimension.territorial::before {
+    background-image: linear-gradient(135deg, rgba(25, 135, 84, .2), rgba(255, 255, 255, .52));
+}
+.card-dimension.temporal::before {
+    background-image: linear-gradient(135deg, rgba(255, 193, 7, .22), rgba(255, 255, 255, .52));
+}
+.card-dimension.multivariada::before {
+    background-image: linear-gradient(135deg, rgba(220, 53, 69, .18), rgba(255, 255, 255, .52));
+}
+
+.card-dimension.poblacional .icono-dim { background: var(--azul-cielo); }
+.card-dimension.territorial .icono-dim { background: var(--verde-natura); }
+.card-dimension.temporal    .icono-dim { background: var(--sol); color:#212529; }
+.card-dimension.multivariada .icono-dim { background: var(--rojo-tierra); }
+
+.card-dimension .grupo-trabajo {
+    display: inline-flex;
+    flex-direction: column;
+    gap: .2rem;
+    padding: .6rem .8rem;
+    border-radius: .7rem;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    margin-top: .45rem;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.card-dimension .grupo-trabajo span {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--color-suave);
+    font-weight: 700;
+}
+
+.card-dimension .grupo-trabajo strong {
+    font-size: .9rem;
+    color: var(--color-texto);
+}
+
+.card-dimension .btn {
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+
+/* --- Tabla de variables --- */
+.panel-dataset {
+    border: 1px solid rgba(13, 110, 253, 0.12);
+    border-radius: 1.1rem;
+    overflow: hidden;
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+}
+
+.panel-dataset-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+    padding: 1rem 1.25rem;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.panel-kicker {
+    display: inline-block;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    opacity: .8;
+    margin-bottom: .4rem;
+}
+
+.panel-dataset-header h4 {
+    color: #fff;
+    font-weight: 700;
+}
+
+.panel-dataset-intro {
+    color: rgba(255, 255, 255, .78);
+    font-size: .86rem;
+    line-height: 1.45;
+    margin-top: .5rem;
+    max-width: 700px;
+}
+
+.tabla-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+    padding-top: 1rem;
+}
+
+.tabla-leyenda span {
+    border-radius: .3rem;
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    padding: .28rem .55rem;
+}
+
+.leyenda-categoria,
+.tipo-categorica { background: #d9eaff !important; color: #14539a !important; }
+.leyenda-numerica,
+.tipo-numerica { background: #dff2c4 !important; color: #426d16 !important; }
+.leyenda-temporal,
+.tipo-temporal { background: #ffe7a3 !important; color: #795707 !important; }
+
+.tabla-variables-wrapper {
+    background: #d9e8f1;
+    border: 1px solid rgba(13, 110, 253, 0.2);
+    border-radius: .35rem;
+    padding: .45rem;
+    margin-top: 1rem;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.72), 0 10px 22px rgba(15, 23, 42, 0.05);
+}
+
+.tabla-variables {
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 2px;
+    overflow: hidden;
+    border-radius: .25rem;
+    background: #bdd5e4;
+}
+
+.tabla-variables thead th {
+    background: linear-gradient(135deg, #168fca 0%, #087bb6 100%);
+    text-transform: uppercase;
+    font-size: .74rem;
+    letter-spacing: .08em;
+    color: #fff;
+    border: 0 !important;
+    padding-top: .9rem;
+    padding-bottom: .9rem;
+}
+
+.tabla-variables tbody td {
+    border: 0;
+    padding-top: .8rem;
+    padding-bottom: .8rem;
+    background: #f7fbfd;
+}
+
+.tabla-variables tbody td:first-child {
+    background: #e8f2f8;
+    color: #164d70;
+}
+
+.tabla-variables tbody td:last-child {
+    background: #fff;
+    color: #4d5f6b;
+}
+
+.tabla-variables tbody tr:hover td { filter: brightness(.97); }
+
+.tabla-variables code {
+    color: var(--azul-cielo);
+    background: #eef2f7;
+    padding: .1rem .35rem;
+    border-radius: .35rem;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+
+/* --- Tarjetas de integrantes --- */
+.card-integrante {
+    border-left: 4px solid var(--azul-cielo);
+    background: linear-gradient(180deg, #fff, #f8fafc);
+    border-radius: 0.9rem;
+}
+
+.card-integrante.i1 { border-left-color: var(--azul-cielo); }
+.card-integrante.i2 { border-left-color: var(--verde-natura); }
+.card-integrante.i3 { border-left-color: var(--sol); }
+.card-integrante.i4 { border-left-color: var(--rojo-tierra); }
 
 
 /* --- Alertas --- */
 .alert-warning {
-    border-left: 4px solid var(--color-temporal);
-    background-color: #fff8e6;
+    border-left: 4px solid var(--sol);
+    background: #fff8e6;
+    border-radius: var(--radio-card);
+}
+
+.alert-info {
+    border-left: 4px solid var(--azul-cielo);
+    background: linear-gradient(180deg, #eef5ff 0%, #f5f9ff 100%);
     border-radius: var(--radio-card);
 }
 
 
-/* --- Badges de equipo --- */
-.badge {
-    font-weight: 500;
-    letter-spacing: .3px;
+/* --- Footer --- */
+.footer-turismo {
+    background: #ffffff;
+    border-top: 1px solid #e9ecef;
+    color: var(--color-suave);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    font-size: .85rem;
+    text-align: center;
 }
 
-
-/* --- Enlaces --- */
-a {
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
+.footer-turismo strong {
+    color: var(--color-texto);
 }
 
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
     h1 { font-size: 1.6rem; }
-    .lead { font-size: 1rem; }
+    .hero-turismo { padding: 2rem 1.25rem; }
+    .card-dato .icono-dato,
+    .card-dimension .icono-dim {
+        width: 44px;
+        height: 44px;
+    }
+
+    .territorial-intro {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding-top: 1.5rem;
+    }
+
+    .territorial-intro h1 { font-size: 2.15rem; }
+    .territorial-stamp { max-width: 260px; }
+
+    .territorial-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .territorial-section-heading,
+    .chart-card-header {
+        align-items: start;
+        flex-direction: column;
+        gap: .45rem;
+    }
+
+    .territorial-section-heading p,
+    .chart-card-header p {
+        text-align: left;
+    }
+
+    .finding-grid { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 480px) {
+    .territorial-kpis { grid-template-columns: 1fr; }
+    .territorial-filter-panel,
+    .territorial-chart-card,
+    .territorial-findings { padding: 1rem; }
+}
+
+
+/* ============================================================
+   INICIO · FONDO ANIMADO (optimizado, sin repaints)
+   ============================================================ */
+.index-page {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: 1rem;
+}
+
+.index-page::before {
+    content: "";
+    position: fixed;
+    inset: -10%;
+    pointer-events: none;
+    z-index: -1;
+    background:
+        radial-gradient(ellipse at 12% 25%, rgba(13, 110, 253, .14) 0 14%, transparent 38%),
+        radial-gradient(ellipse at 88% 30%, rgba(220, 53, 69, .11) 0 14%, transparent 38%),
+        radial-gradient(ellipse at 25% 75%, rgba(25, 135, 84, .13) 0 14%, transparent 38%),
+        radial-gradient(ellipse at 78% 82%, rgba(255, 193, 7, .12) 0 14%, transparent 38%);
+    will-change: transform;
+    animation: dimension-waves 32s ease-in-out infinite alternate;
+    transform: translate3d(0, 0, 0);
+}
+
+.index-page > * { position: relative; z-index: 1; }
+
+@keyframes dimension-waves {
+    0%   { transform: translate3d(-1.5%, 0, 0); }
+    50%  { transform: translate3d( 1.5%, 1%, 0); }
+    100% { transform: translate3d(-1%, -1%, 0); }
+}
+
+
+/* ============================================================
+   INICIO · SNAPSHOT
+   ============================================================ */
+.project-snapshot {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(300px, .8fr);
+    gap: 2rem;
+    background: rgba(255, 255, 255, .84);
+    border: 1px solid rgba(11, 79, 74, .16);
+    border-radius: 1.15rem;
+    padding: 1.5rem 1.7rem;
+    box-shadow: 0 14px 28px rgba(11, 79, 74, .08);
+}
+
+.snapshot-copy h2 {
+    color: #0b4f4a;
+    font-size: clamp(1.45rem, 3vw, 2.1rem);
+    line-height: 1.1;
+    margin-bottom: .7rem;
+}
+
+.snapshot-copy > p {
+    color: #4d6e69;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    max-width: 700px;
+}
+
+.snapshot-context {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.snapshot-context div {
+    border-left: 3px solid #2f8061;
+    padding-left: .75rem;
+}
+
+.snapshot-context div:last-child { border-left-color: #e5ad45; }
+
+.snapshot-context span,
+.snapshot-source span {
+    display: block;
+    color: #8a641b;
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: .25rem;
+}
+
+.snapshot-context strong {
+    color: #315d58;
+    font-size: .86rem;
+    line-height: 1.4;
+}
+
+.snapshot-data {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-content: start;
+    gap: .65rem;
+}
+
+.snapshot-stat {
+    background: rgba(232, 239, 234, .76);
+    border-radius: .7rem;
+    padding: .7rem;
+    text-align: center;
+}
+
+.snapshot-stat strong {
+    display: block;
+    color: #0b4f4a;
+    font-size: 1.75rem;
+    line-height: 1;
+}
+
+.snapshot-stat span {
+    color: #5f7773;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.snapshot-source {
+    grid-column: 1 / -1;
+    border-top: 1px solid rgba(11, 79, 74, .14);
+    padding-top: .8rem;
+    margin-top: .15rem;
+}
+
+.snapshot-source strong,
+.snapshot-source small { display: block; color: #315d58; }
+.snapshot-source strong { font-size: .95rem; }
+.snapshot-source small { font-size: .76rem; margin-top: .2rem; }
+
+
+/* ============================================================
+   INICIO · ENCABEZADO DE DIMENSIONES
+   ============================================================ */
+.dimensions-heading {
+    align-items: end;
+    border-bottom-color: rgba(11, 79, 74, .2);
+}
+
+.dimensions-heading h2 { color: #0b4f4a; font-size: 1.65rem; }
+.dimensions-heading p { color: #52716d; max-width: 380px; margin: 0 0 .15rem; text-align: right; }
+
+
+/* ============================================================
+   INICIO · GRID DE DIMENSIONES CON PROFUNDIDAD 3D REAL
+   ============================================================
+   Técnica: cada tarjeta tiene una CAPA LATERAL (<span class="shape-3d-layer">)
+   que se posiciona detrás con translate3d. Esto simula el "costado" 3D
+   de la figura SIN usar filter: drop-shadow (que repinta en cada frame).
+   ============================================================ */
+
+.dimensions-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(340px, auto));
+    gap: 3rem 5rem;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2rem;
+    perspective: 1400px;
+}
+
+.dimension-node {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Orden: 01 arriba-izq · 02 arriba-der · 03 abajo-izq · 04 abajo-der */
+.node-poblacional  { grid-column: 1; grid-row: 1; }
+.node-territorial  { grid-column: 2; grid-row: 1; }
+.node-temporal     { grid-column: 1; grid-row: 2; }
+.node-multivariada { grid-column: 2; grid-row: 2; }
+
+/* Reset base de la card-dimension dentro del grid */
+.dimensions-grid .card-dimension {
+    position: relative;
+    width: 100%;
+    min-height: 340px;
+    overflow: visible;              /* permitir que la capa 3D se salga */
+    border: 0 !important;
+    border-top: 0 !important;
+    background: #fff;
+    transform-style: preserve-3d;
+    transition: transform .3s cubic-bezier(.2,.7,.3,1);
+    will-change: transform;
+}
+
+/* La capa lateral 3D: se coloca DETRÁS de la tarjeta, desplazada */
+.shape-3d-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    /* valores por defecto — cada figura los sobreescribe */
+    transform: translate3d(14px, 16px, -1px);
+    opacity: .55;
+    transition: transform .3s cubic-bezier(.2,.7,.3,1), opacity .3s ease;
+}
+
+.dimensions-grid .card-dimension:hover {
+    transform: translate3d(0, -8px, 30px);
+}
+
+.dimensions-grid .card-dimension:hover .shape-3d-layer {
+    transform: translate3d(22px, 26px, -1px);
+    opacity: .75;
+}
+
+/* El contenido siempre por encima */
+.dimensions-grid .card-dimension .card-body {
+    position: relative;
+    z-index: 3;
+    transform: translateZ(20px);
+    backface-visibility: hidden;
+    padding: 2rem 2.2rem;
+}
+
+.dimensions-grid .card-dimension .card-text {
+    font-size: .86rem !important;
+    line-height: 1.4;
+}
+
+
+/* ---------- 01 · POBLACIONAL · Esfera / orbe ---------- */
+.node-poblacional .card-dimension {
+    width: min(100%, 340px);
+    min-height: 340px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 32% 26%, rgba(255,255,255,.95) 0 8%, rgba(255,255,255,.15) 20%, transparent 38%),
+        radial-gradient(circle at 68% 72%, #0b4fa8 0%, #0d6efd 45%, #5aa3ff 100%);
+    box-shadow:
+        inset -22px -26px 40px rgba(5, 57, 132, .45),
+        inset 10px 12px 30px rgba(255, 255, 255, .18),
+        0 24px 32px rgba(13, 110, 253, .22);
+    overflow: hidden;
+}
+
+.node-poblacional .shape-3d-layer {
+    background: radial-gradient(circle, rgba(13, 110, 253, .22), rgba(13, 110, 253, 0) 70%);
+    border-radius: 50%;
+    transform: translate3d(0, 20px, -1px) scale(.92);
+    opacity: .9;
+}
+
+.node-poblacional .card-dimension:hover .shape-3d-layer {
+    transform: translate3d(0, 30px, -1px) scale(.94);
+    opacity: 1;
+}
+
+.node-poblacional .card-body {
+    align-items: center;
+    justify-content: center;
+    max-width: 78%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2.2rem 1.2rem !important;
+}
+
+
+/* ---------- 02 · TERRITORIAL · Cubo / prisma ---------- */
+.node-territorial .card-dimension {
+    width: 100%;
+    min-height: 340px;
+    border-radius: 0;
+    clip-path: polygon(0 8%, 84% 8%, 100% 0, 100% 92%, 84% 100%, 0 100%);
+    background: linear-gradient(145deg, rgba(255,255,255,.98) 0 55%, rgba(169, 218, 188, .95) 56% 100%);
+    box-shadow: 0 18px 30px rgba(25, 135, 84, .18);
+}
+
+.node-territorial .shape-3d-layer {
+    background: linear-gradient(160deg, #198754, #0b4f4a);
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+    opacity: .55;
+    transform: translate3d(18px, 20px, -1px);
+}
+
+.node-territorial .card-dimension:hover .shape-3d-layer {
+    opacity: .75;
+    transform: translate3d(26px, 30px, -1px);
+}
+
+.node-territorial .card-body {
+    max-width: 82%;
+    padding: 2.6rem 1.2rem 2rem 2.4rem !important;
+}
+
+
+/* ---------- 03 · TEMPORAL · Pirámide / prisma inclinado ---------- */
+.node-temporal .card-dimension {
+    width: min(100%, 380px);
+    min-height: 340px;
+    margin: 0 auto;
+    border-radius: 0;
+    clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+    background: linear-gradient(115deg, #ffe9a8 0 49%, #d9a41a 50% 100%);
+    box-shadow: 0 18px 30px rgba(193, 136, 0, .22);
+}
+
+.node-temporal .shape-3d-layer {
+    background: linear-gradient(115deg, #b8820b 0 49%, #8a6108 50% 100%);
+    clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+    opacity: .55;
+    transform: translate3d(18px, 22px, -1px);
+}
+
+.node-temporal .card-dimension:hover .shape-3d-layer {
+    opacity: .75;
+    transform: translate3d(26px, 32px, -1px);
+}
+
+.node-temporal .card-body {
+    justify-content: flex-start;
+    align-items: center;
+    max-width: 76%;
+    margin: 0 auto;
+    padding: 2.8rem .6rem 2rem !important;
+    text-align: center;
+}
+
+
+/* ---------- 04 · MULTIVARIADA · Poliedro / diamante ---------- */
+.node-multivariada .card-dimension {
+    width: 100%;
+    min-height: 340px;
+    border-radius: 0;
+    clip-path: polygon(8% 0, 86% 0, 100% 14%, 96% 86%, 84% 100%, 8% 100%, 0 84%, 4% 14%);
+    background: linear-gradient(135deg, rgba(255,255,255,.98) 0 43%, rgba(239, 185, 194, .94) 44% 100%);
+    box-shadow: 0 18px 30px rgba(220, 53, 69, .18);
+}
+
+.node-multivariada .shape-3d-layer {
+    background: linear-gradient(160deg, #dc3545, #6f42c1);
+    clip-path: polygon(0 0, 100% 0, 72% 100%, 0 88%);
+    opacity: .55;
+    transform: translate3d(20px, 22px, -1px);
+}
+
+.node-multivariada .card-dimension:hover .shape-3d-layer {
+    opacity: .75;
+    transform: translate3d(28px, 30px, -1px);
+}
+
+.node-multivariada .card-body {
+    max-width: 82%;
+    padding: 2.4rem 2rem 2rem 2.6rem !important;
+}
+
+
+/* ============================================================
+   RESPONSIVE del grid de dimensiones
+   ============================================================ */
+@media (max-width: 900px) {
+    .project-snapshot { grid-template-columns: 1fr; }
+    .dimensions-grid { gap: 2rem 2.5rem; padding: 1rem; }
+    .dimensions-grid .card-dimension .card-body { padding: 1.5rem !important; }
+}
+
+@media (max-width: 640px) {
+    .snapshot-context { grid-template-columns: 1fr; }
+    .snapshot-data { grid-template-columns: repeat(3, 1fr); }
+    .dimensions-heading { display: block; }
+    .dimensions-heading p { margin-top: .65rem; text-align: left; }
+
+    .dimensions-grid {
+        display: block;
+        padding: 0;
+        perspective: none;
+    }
+
+    .dimension-node { margin-bottom: 1.5rem; }
+
+    /* En móvil, todas las figuras colapsan a tarjetas rectangulares planas */
+    .dimensions-grid .card-dimension,
+    .node-poblacional .card-dimension,
+    .node-territorial .card-dimension,
+    .node-temporal .card-dimension,
+    .node-multivariada .card-dimension {
+        width: 100%;
+        min-height: 0;
+        aspect-ratio: auto;
+        border-radius: .9rem;
+        clip-path: none;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, .08);
+    }
+
+    .shape-3d-layer { display: none; }
+
+    .dimensions-grid .card-dimension .card-body,
+    .node-poblacional .card-body,
+    .node-territorial .card-body,
+    .node-temporal .card-body,
+    .node-multivariada .card-body {
+        max-width: 100%;
+        padding: 1.5rem !important;
+        text-align: left;
+        align-items: stretch;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+    }
+    .index-page::before { animation: none; }
+    .dimensions-grid .card-dimension:hover { transform: none; }
+}
+
+
+/* ============================================================
+   DASHBOARD TERRITORIAL
+   ============================================================ */
+.territorial-dashboard {
+    color: #183b38;
+}
+
+.territorial-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 2rem;
+    align-items: end;
+    padding: 2.2rem 0 1.8rem;
+    border-bottom: 1px solid rgba(11, 79, 74, .18);
+}
+
+.territorial-kicker {
+    display: block;
+    color: #8a641b;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    margin-bottom: .55rem;
+}
+
+.territorial-intro h1 {
+    max-width: 760px;
+    color: #0b4f4a;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    margin-bottom: 1rem;
+}
+
+.territorial-question {
+    max-width: 780px;
+    color: #1b4e49;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin-bottom: .5rem;
+}
+
+.territorial-summary {
+    color: #52716d;
+    max-width: 700px;
+}
+
+.territorial-stamp {
+    border-left: 3px solid #e5ad45;
+    padding: .5rem 0 .5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+.territorial-stamp span,
+.territorial-stamp small {
+    color: #52716d;
+    font-size: .78rem;
+}
+
+.territorial-stamp strong {
+    color: #0b4f4a;
+    font-size: 1.35rem;
+}
+
+.territorial-filter-panel {
+    background: rgba(255, 255, 255, .82);
+    border: 1px solid rgba(11, 79, 74, .16);
+    border-radius: .85rem;
+    padding: 1.2rem 1.3rem 1.3rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 10px 24px rgba(11, 79, 74, .06);
+}
+
+.filter-heading { margin-bottom: .8rem; }
+
+.filter-heading h2,
+.territorial-section-heading h2,
+.territorial-findings h2 {
+    color: #0b4f4a;
+    font-size: 1.35rem;
+    margin: 0;
+}
+
+.territorial-filter-panel .form-label {
+    color: #315d58;
+    font-size: .8rem;
+    font-weight: 700;
+    margin-bottom: .35rem;
+}
+
+.territorial-filter-panel .form-select {
+    border-color: rgba(11, 79, 74, .22);
+    color: #183b38;
+    min-height: 44px;
+}
+
+.btn-territorial {
+    background: #0b4f4a;
+    border: 1px solid #0b4f4a;
+    color: #fff;
+    min-height: 44px;
+    font-weight: 700;
+}
+
+.btn-territorial:hover,
+.btn-territorial:focus {
+    background: #176b5c;
+    border-color: #176b5c;
+    color: #fff;
+}
+
+.territorial-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .85rem;
+    margin-bottom: 2.5rem;
+}
+
+.territorial-kpi {
+    background: rgba(255, 255, 255, .9);
+    border: 1px solid rgba(11, 79, 74, .15);
+    border-top: 4px solid #0b4f4a;
+    border-radius: .75rem;
+    padding: 1rem;
+    min-height: 132px;
+    box-shadow: 0 8px 20px rgba(11, 79, 74, .06);
+}
+
+.territorial-kpi span {
+    display: block;
+    color: #52716d;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    min-height: 2.2em;
+}
+
+.territorial-kpi strong {
+    display: block;
+    color: #0b4f4a;
+    font-size: 1.35rem;
+    line-height: 1.15;
+    margin: .45rem 0 .3rem;
+    overflow-wrap: anywhere;
+}
+
+.territorial-kpi small {
+    color: #5f7773;
+    line-height: 1.35;
+}
+
+.territorial-kpi.kpi-concentration { border-top-color: #e5ad45; }
+.territorial-kpi.kpi-low { border-top-color: #b96a4b; }
+
+.territorial-section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin: 2rem 0 1rem;
+}
+
+.territorial-section-heading p {
+    color: #52716d;
+    margin: 0 0 .15rem;
+    text-align: right;
+    max-width: 410px;
+}
+
+.compact-heading { margin-top: 2.8rem; }
+
+.territorial-chart-card {
+    background: rgba(255, 255, 255, .94);
+    border: 1px solid rgba(11, 79, 74, .15);
+    border-radius: .85rem;
+    padding: 1.25rem;
+    box-shadow: 0 10px 24px rgba(11, 79, 74, .07);
+}
+
+.chart-card-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .75rem;
+}
+
+.chart-card-header > div {
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+}
+
+.chart-index {
+    color: #b07a1a;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.chart-card-header h3 {
+    color: #183b38;
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.chart-card-header p {
+    color: #6a817d;
+    font-size: .82rem;
+    margin: 0;
+    text-align: right;
+}
+
+.territorial-findings {
+    background: #0b4f4a;
+    border-radius: .9rem;
+    color: #fff;
+    margin-top: 2.8rem;
+    padding: 1.5rem;
+}
+
+.territorial-findings .territorial-kicker { color: #f2c66d; }
+.territorial-findings h2 { color: #fff; }
+
+.finding-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.4rem;
+}
+
+.finding-grid article {
+    border-top: 1px solid rgba(255, 255, 255, .28);
+    padding-top: .8rem;
+}
+
+.finding-grid article > span {
+    color: #f2c66d;
+    font-size: .75rem;
+    font-weight: 800;
+}
+
+.finding-grid h3 {
+    color: #fff;
+    font-size: 1rem;
+    margin: .45rem 0;
+}
+
+.finding-grid p {
+    color: rgba(255, 255, 255, .78);
+    font-size: .9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.territorial-note {
+    border-left: 4px solid #e5ad45;
+    background: rgba(255, 249, 231, .92);
+    color: #5f4a21;
+    margin: 1.2rem 0 2.5rem;
+    padding: 1rem 1.15rem;
+    border-radius: .2rem .7rem .7rem .2rem;
+}
+
+.territorial-note strong {
+    display: block;
+    margin-bottom: .3rem;
+}
+
+.territorial-note p { font-size: .9rem; }

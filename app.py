@@ -110,11 +110,15 @@ def territorial():
     municipio_top    = por_municipio.index[0] if total else '—'
     cantidad_top     = int(por_municipio.iloc[0]) if total else 0
     porcentaje_top   = round(cantidad_top / total * 100, 2) if total else 0
+    municipio_menor  = por_municipio.index[-1] if total else '—'
+    cantidad_menor   = int(por_municipio.iloc[-1]) if total else 0
 
     top3             = int(por_municipio.head(3).sum())
     concentracion_top3 = round(top3 / total * 100, 2) if total else 0
 
     por_depto = df_filtrado['DEPARTAMENTO'].value_counts()
+    departamento_top = por_depto.index[0] if total else '—'
+    porcentaje_depto_top = round(int(por_depto.iloc[0]) / total * 100, 2) if total else 0
 
     # --- Datos para gráficas ---
     top10 = por_municipio.head(10)
@@ -159,7 +163,12 @@ def territorial():
         "municipio_top": municipio_top,
         "cantidad_municipio_top": cantidad_top,
         "porcentaje_municipio_top": porcentaje_top,
+        "municipio_menor": municipio_menor,
+        "cantidad_municipio_menor": cantidad_menor,
+        "territorios": int(por_municipio.size),
         "concentracion_top3": concentracion_top3,
+        "departamento_top": departamento_top,
+        "porcentaje_depto_top": porcentaje_depto_top,
         "participacion_depto": {
             k: round(v / total * 100, 2) for k, v in por_depto.items()
         } if total else {},

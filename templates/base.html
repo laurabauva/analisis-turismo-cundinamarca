@@ -70,12 +70,13 @@
 </head>
 
 
+
 <body class="bg-light">
 
 <!-- ============================================
-     NAVBAR PRINCIPAL
+     NAVBAR TEMÁTICA
      ============================================ -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-turismo">
     <div class="container">
 
         <a class="navbar-brand" href="/">
@@ -100,26 +101,10 @@
                         Análisis de datos
                     </a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="/poblacional">
-                                Dimensión poblacional
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/territorial">
-                                Dimensión territorial
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/temporal">
-                                Dimensión temporal
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/multivariada">
-                                Dimensión relacional y multivariada
-                            </a>
-                        </li>
+                        <li><a class="dropdown-item" href="/poblacional"> Dimensión poblacional</a></li>
+                        <li><a class="dropdown-item" href="/territorial"> Dimensión territorial</a></li>
+                        <li><a class="dropdown-item" href="/temporal"> Dimensión temporal</a></li>
+                        <li><a class="dropdown-item" href="/multivariada"> Dimensión relacional y multivariada</a></li>
                     </ul>
                 </li>
 
@@ -151,7 +136,18 @@
      ============================================ -->
 {% block modal_info %}{% endblock %}
 
-
+<footer class="footer-turismo">
+    <div class="container">
+        <p class="mb-1">
+            <strong>Análisis exploratorio del Registro Nacional de Turismo</strong>
+            · Bogotá D.C. y Cundinamarca
+        </p>
+        <p class="mb-0">
+            Proyecto académico · Datos abiertos de Colombia ·
+            <a href="https://datos.gov.co" target="_blank">datos.gov.co</a>
+        </p>
+    </div>
+</footer>
 <!-- ============================================
      SCRIPTS
      ============================================ -->
