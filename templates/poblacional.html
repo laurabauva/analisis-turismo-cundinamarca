@@ -1,0 +1,352 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Dimensión poblacional{% endblock %}
+
+{% block head %}
+<style>
+    .grafica-categorias     { height: 650px; }
+    .grafica-participacion  { height: 520px; }
+    .grafica-subcategorias  { height: 520px; }
+    .contenedor-grafica     { position: relative; width: 100%; }
+
+    @media (max-width: 768px) {
+        .grafica-categorias { height: 750px; }
+        .grafica-participacion,
+        .grafica-subcategorias { height: 450px; }
+    }
+</style>
+{% endblock %}
+
+{% block chart_library %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+
+<!-- ============================================
+     NAVEGACIÓN LATERAL - POBLACIONAL (azul)
+     ============================================ -->
+{% block navegacion_dimension %}
+
+    <a href="/multivariada"
+       class="nav-lateral nav-lateral-izq"
+       style="background:#0d6efd;"
+       title="Ir a: Dimensión relacional y multivariada">
+        &#8592;
+    </a>
+
+    <button type="button"
+            class="nav-info"
+            style="background:#0d6efd;"
+            data-bs-toggle="modal"
+            data-bs-target="#modalDimension"
+            title="Información de esta dimensión">
+        i
+    </button>
+
+    <a href="/territorial"
+       class="nav-lateral nav-lateral-der"
+       style="background:#0d6efd;"
+       title="Ir a: Dimensión territorial">
+        &#8594;
+    </a>
+
+{% endblock %}
+
+
+<!-- ============================================
+     MODAL DE INFORMACIÓN
+     ============================================ -->
+{% block modal_info %}
+<div class="modal fade" id="modalDimension" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Dimensión poblacional</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Pregunta:</strong>
+                    ¿Cómo está compuesta y distribuida la población
+                    turística registrada según sus principales
+                    características?
+                </p>
+
+                <p><strong>Variables utilizadas:</strong></p>
+                <ul>
+                    <li><code>CATEGORIA</code></li>
+                    <li><code>SUB_CATEGORIA</code></li>
+                    <li><code>ESTADO</code></li>
+                    <li><code>ANIO</code></li>
+                </ul>
+
+                <p><strong>Indicadores:</strong></p>
+                <ul>
+                    <li>Total de registros</li>
+                    <li>Total de categorías identificadas</li>
+                    <li>Categoría predominante y su porcentaje</li>
+                </ul>
+
+                <p class="mb-0"><strong>Filtros disponibles:</strong>
+                    Próximamente.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- ENCABEZADO -->
+<div class="mb-4">
+    <h1>Dimensión poblacional</h1>
+    <p class="lead">
+        ¿Cómo está compuesta y distribuida la población turística
+        registrada según sus principales características?
+    </p>
+    <p class="text-muted">
+        Análisis de los prestadores registrados en el conjunto de datos
+        del Registro Nacional de Turismo.
+    </p>
+</div>
+
+<!-- INDICADORES -->
+<div class="row g-4 mb-5">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Total de registros</h6>
+                <h2 class="fw-bold">
+                    {{ "{:,}".format(datos.total_registros).replace(",", ".") }}
+                </h2>
+                <p class="mb-0">Prestadores registrados</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Categorías</h6>
+                <h2 class="fw-bold">{{ datos.total_categorias }}</h2>
+                <p class="mb-0">Categorías identificadas</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Categoría predominante</h6>
+                <h5 class="fw-bold mt-2">{{ datos.categoria_principal }}</h5>
+                <p class="mb-0">
+                    {{ "{:,}".format(datos.cantidad_categoria_principal).replace(",", ".") }}
+                    registros ({{ datos.porcentaje_categoria_principal }}%)
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- VISUALIZACIONES -->
+<div class="row g-4">
+
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4>Distribución de registros por categoría</h4>
+                <p class="text-muted">
+                    Permite identificar las categorías con mayor y menor
+                    presencia dentro de la población analizada.
+                </p>
+                <div class="contenedor-grafica grafica-categorias">
+                    <canvas id="categoriasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h4>Participación por categoría</h4>
+                <p class="text-muted">
+                    Participación de las cinco categorías con mayor
+                    cantidad de registros. Las demás se agrupan como "Otras".
+                </p>
+                <div class="contenedor-grafica grafica-participacion">
+                    <canvas id="participacionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h4>Principales subcategorías</h4>
+                <p class="text-muted">
+                    Se presentan las diez subcategorías con mayor cantidad
+                    de registros.
+                </p>
+                <div class="contenedor-grafica grafica-subcategorias">
+                    <canvas id="subcategoriasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- CONOCIMIENTOS EVIDENTES -->
+<div class="card shadow-sm mt-5">
+    <div class="card-body">
+        <h3>Conocimientos evidentes</h3>
+
+        <div class="mt-4">
+            <h5>1. Concentración por categoría</h5>
+            <p>
+                La categoría con mayor presencia es
+                <strong>{{ datos.categoria_principal }}</strong>, con
+                <strong>{{ "{:,}".format(datos.cantidad_categoria_principal).replace(",", ".") }}</strong>
+                registros, equivalentes al
+                <strong>{{ datos.porcentaje_categoria_principal }}%</strong>
+                de la población analizada.
+            </p>
+        </div>
+
+        <div class="mt-4">
+            <h5>2. Principales categorías</h5>
+            <p>
+                Después de la categoría dominante, las agencias de viajes
+                y los establecimientos de alojamiento turístico presentan
+                las mayores cantidades de registros.
+            </p>
+        </div>
+
+        <div class="mt-4">
+            <h5>3. Principales subcategorías</h5>
+            <p>
+                Las subcategorías con mayor presencia incluyen apartamento
+                turístico, agencias de viajes y de turismo, fincas
+                turísticas y hotel.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- LIMITACIÓN -->
+<div class="alert alert-warning mt-4">
+    <h5>Limitación del análisis</h5>
+    <p class="mb-0">
+        Las variables de habitaciones, camas y empleados presentan
+        valores iguales a cero en una proporción considerable de
+        registros. Estos valores pueden corresponder a características
+        que no aplican a determinadas categorías, por lo que los
+        promedios generales deben interpretarse con precaución.
+    </p>
+</div>
+
+<!-- DECISIÓN -->
+<div class="card shadow-sm mt-4 mb-5">
+    <div class="card-body">
+        <h5>Posible decisión sustentada en los datos</h5>
+        <p class="mb-0">
+            La concentración de registros en determinadas categorías
+            puede utilizarse como insumo para priorizar el análisis y
+            caracterización de los tipos de prestadores con mayor
+            presencia en la población turística registrada.
+        </p>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    const categorias    = {{ datos.categorias | tojson }};
+    const subcategorias = {{ datos.subcategorias | tojson }};
+
+    const nombresCategorias    = categorias.map(i => i.categoria);
+    const cantidadesCategorias = categorias.map(i => i.cantidad);
+    const nombresSubcategorias = subcategorias.map(i => i.subcategoria);
+    const cantidadesSubcategorias = subcategorias.map(i => i.cantidad);
+
+    /* GRÁFICA 1 */
+    new Chart(document.getElementById("categoriasChart"), {
+        type: "bar",
+        data: {
+            labels: nombresCategorias,
+            datasets: [{ label: "Registros", data: cantidadesCategorias }]
+        },
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { beginAtZero: true, title: { display: true, text: "Cantidad de registros" } },
+                y: { ticks: { autoSkip: false, font: { size: 11 } } }
+            }
+        }
+    });
+
+    /* GRÁFICA 2 */
+    const categoriasParticipacion = categorias.slice(0, 5);
+    const cantidadTop5 = categoriasParticipacion.reduce((t, i) => t + i.cantidad, 0);
+    const porcentajeOtras = 100 - (cantidadTop5 / {{ datos.total_registros }} * 100);
+
+    new Chart(document.getElementById("participacionChart"), {
+        type: "doughnut",
+        data: {
+            labels: [...categoriasParticipacion.map(i => i.categoria), "Otras"],
+            datasets: [{
+                data: [...categoriasParticipacion.map(i => i.porcentaje),
+                       Number(porcentajeOtras.toFixed(2))]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: "bottom", labels: { padding: 15, boxWidth: 15, font: { size: 11 } } },
+                tooltip: { callbacks: { label: ctx => ctx.label + ": " + ctx.parsed.toFixed(2) + "%" } }
+            }
+        }
+    });
+
+    /* GRÁFICA 3 */
+    new Chart(document.getElementById("subcategoriasChart"), {
+        type: "bar",
+        data: {
+            labels: nombresSubcategorias,
+            datasets: [{ label: "Registros", data: cantidadesSubcategorias }]
+        },
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { beginAtZero: true, title: { display: true, text: "Cantidad de registros" } },
+                y: { ticks: { autoSkip: false, font: { size: 10 } } }
+            }
+        }
+    });
+</script>
+{% endblock %}

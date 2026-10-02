@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Dimensión temporal{% endblock %}
+
+{% block head %}
+<style>
+    .grafica-evolucion { height: 520px; }
+    .grafica-anual     { height: 480px; }
+    .grafica-periodos  { height: 480px; }
+    .contenedor-grafica { position: relative; width: 100%; }
+
+    @media (max-width: 768px) {
+        .grafica-evolucion,
+        .grafica-anual,
+        .grafica-periodos { height: 420px; }
+    }
+</style>
+{% endblock %}
+
+
+<!-- ============================================
+     NAVEGACIÓN LATERAL - TEMPORAL (amarillo)
+     ============================================ -->
+{% block navegacion_dimension %}
+
+    <a href="/territorial"
+       class="nav-lateral nav-lateral-izq"
+       style="background:#ffc107; color:#212529;"
+       title="Ir a: Dimensión territorial">
+        &#8592;
+    </a>
+
+    <button type="button"
+            class="nav-info"
+            style="background:#ffc107; color:#212529;"
+            data-bs-toggle="modal"
+            data-bs-target="#modalDimension"
+            title="Información de esta dimensión">
+        i
+    </button>
+
+    <a href="/multivariada"
+       class="nav-lateral nav-lateral-der"
+       style="background:#ffc107; color:#212529;"
+       title="Ir a: Dimensión relacional y multivariada">
+        &#8594;
+    </a>
+
+{% endblock %}
+
+
+<!-- ============================================
+     MODAL DE INFORMACIÓN
+     ============================================ -->
+{% block modal_info %}
+<div class="modal fade" id="modalDimension" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Dimensión temporal</h5>
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Pregunta:</strong>
+                    ¿Cómo ha cambiado el comportamiento de la población
+                    durante el periodo disponible?
+                </p>
+
+                <p><strong>Variables utilizadas:</strong></p>
+                <ul>
+                    <li><code>ANIO</code></li>
+                    <li><code>CATEGORIA</code></li>
+                    <li><code>ESTADO</code></li>
+                </ul>
+
+                <p><strong>Indicadores:</strong></p>
+                <ul>
+                    <li>Año con mayor cantidad de registros</li>
+                    <li>Año con menor cantidad de registros</li>
+                    <li>Variación porcentual entre periodos</li>
+                </ul>
+
+                <p class="mb-0"><strong>Filtros disponibles:</strong>
+                    Próximamente.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- ENCABEZADO -->
+<div class="mb-4">
+    <h1>Dimensión temporal</h1>
+    <p class="lead">
+        ¿Cómo ha cambiado el comportamiento de la población
+        durante el periodo disponible?
+    </p>
+    <p class="text-muted">
+        Análisis de la evolución anual de los prestadores turísticos
+        registrados.
+    </p>
+</div>
+
+<!-- INDICADORES -->
+<div class="row g-4 mb-5">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Año con más registros</h6>
+                <h2 class="fw-bold">{{ datos.anio_max if datos is defined else '—' }}</h2>
+                <p class="mb-0">Pico de la serie</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Año con menos registros</h6>
+                <h2 class="fw-bold">{{ datos.anio_min if datos is defined else '—' }}</h2>
+                <p class="mb-0">Valle de la serie</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm h-

@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+
+{% block title %}Dimensión territorial{% endblock %}
+
+{% block head %}
+<style>
+    .grafica-municipios   { height: 650px; }
+    .grafica-departamento { height: 480px; }
+    .grafica-cruce        { height: 520px; }
+    .contenedor-grafica   { position: relative; width: 100%; }
+
+    @media (max-width: 768px) {
+        .grafica-municipios { height: 750px; }
+        .grafica-departamento,
+        .grafica-cruce      { height: 420px; }
+    }
+</style>
+{% endblock %}
+
+{% block chart_library %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+
+<!-- ============================================
+     NAVEGACIÓN LATERAL - TERRITORIAL (verde)
+     ============================================ -->
+{% block navegacion_dimension %}
+
+    <a href="/poblacional"
+       class="nav-lateral nav-lateral-izq"
+       style="background:#198754;"
+       title="Ir a: Dimensión poblacional">
+        &#8592;
+    </a>
+
+    <button type="button"
+            class="nav-info"
+            style="background:#198754;"
+            data-bs-toggle="modal"
+            data-bs-target="#modalDimension"
+            title="Información de esta dimensión">
+        i
+    </button>
+
+    <a href="/temporal"
+       class="nav-lateral nav-lateral-der"
+       style="background:#198754;"
+       title="Ir a: Dimensión temporal">
+        &#8594;
+    </a>
+
+{% endblock %}
+
+
+<!-- ============================================
+     MODAL DE INFORMACIÓN
+     ============================================ -->
+{% block modal_info %}
+<div class="modal fade" id="modalDimension" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Dimensión territorial</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Pregunta:</strong>
+                    ¿Cómo se distribuye la población turística registrada
+                    y sus principales características entre los territorios
+                    disponibles?
+                </p>
+
+                <p><strong>Variables utilizadas:</strong></p>
+                <ul>
+                    <li><code>DEPARTAMENTO</code></li>
+                    <li><code>MUNICIPIO</code></li>
+                    <li><code>CATEGORIA</code></li>
+                    <li><code>CODIGO_MUNICIPIO</code></li>
+                </ul>
+
+                <p><strong>Indicadores:</strong></p>
+                <ul>
+                    <li>Municipio líder por cantidad de registros</li>
+                    <li>Concentración del top 3 de municipios</li>
+                    <li>Total de prestadores analizados</li>
+                </ul>
+
+                <p class="mb-0"><strong>Filtros disponibles:</strong>
+                    Departamento y categoría turística.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="territorial-dashboard">
+    <section class="territorial-intro">
+        <div>
+            <span class="territorial-kicker">Dimensión asignada · Territorial</span>
+            <h1>El territorio como mapa de la oferta turística</h1>
+            <p class="territorial-question">
+                ¿Cómo se distribuye la población y sus principales características
+                entre los territorios disponibles?
+            </p>
+            <p class="territorial-summary mb-0">
+                Lectura comparativa por departamento y municipio para identificar
+                concentraciones, brechas y comportamientos particulares.
+            </p>
+        </div>
+        <div class="territorial-stamp">
+            <span>Unidad de análisis</span>
+            <strong>Municipio</strong>
+            <small>Registro Nacional de Turismo</small>
+        </div>
+    </section>
+
+    <section class="territorial-filter-panel">
+        <div class="filter-heading">
+            <span class="territorial-kicker">Explorar el territorio</span>
+            <h2>Selecciona el recorte del análisis</h2>
+        </div>
+        <form method="GET" action="/territorial" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label" for="departamento">Departamento</label>
+                <select id="departamento" name="departamento" class="form-select">
+                    <option value="TODOS" {% if filtro_dep == 'TODOS' %}selected{% endif %}>Todos los departamentos</option>
+                    {% for d in departamentos %}
+                        <option value="{{ d }}" {% if filtro_dep == d %}selected{% endif %}>{{ d }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label class="form-label" for="categoria">Categoría turística</label>
+                <select id="categoria" name="categoria" class="form-select">
+                    <option value="TODAS" {% if filtro_cat == 'TODAS' %}selected{% endif %}>Todas las categorías</option>
+                    {% for c in categorias %}
+                        <option value="{{ c }}" {% if filtro_cat == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-territorial w-100" type="submit">Aplicar filtro</button>
+                <a class="btn btn-link btn-sm w-100 mt-1" href="/territorial">Limpiar filtros</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="territorial-kpis" aria-label="Indicadores territoriales">
+        <article class="territorial-kpi kpi-lead">
+            <span>Municipio con mayor presencia</span>
+            <strong>{{ datos.municipio_top }}</strong>
+            <small>{{ "{:,}".format(datos.cantidad_municipio_top).replace(",", ".") }} registros · {{ datos.porcentaje_municipio_top }}%</small>
+        </article>
+        <article class="territorial-kpi kpi-spread">
+            <span>Municipios observados</span>
+            <strong>{{ datos.territorios }}</strong>
+            <small>promedio de {{ datos.promedio_municipio }} registros por municipio</small>
+        </article>
+        <article class="territorial-kpi kpi-concentration">
+            <span>Concentración territorial</span>
+            <strong>{{ datos.concentracion_top3 }}%</strong>
+            <small>acumulado por los tres primeros municipios</small>
+        </article>
+        <article class="territorial-kpi kpi-low">
+            <span>Menor presencia registrada</span>
+            <strong>{{ datos.municipio_menor }}</strong>
+            <small>{{ datos.cantidad_municipio_menor }} registro(s) · brecha de {{ datos.brecha_registros }}</small>
+        </article>
+    </section>
+
+    <section class="territorial-reading-guide">
+        <div class="reading-guide-title">
+            <span class="territorial-kicker">Cómo leer esta dimensión</span>
+            <h2>Del registro individual al comportamiento del territorio</h2>
+            <p>
+                Cada visualización responde una parte de la pregunta territorial:
+                primero localiza la oferta, después compara su peso y finalmente
+                muestra qué tipo de actividad caracteriza a cada zona.
+            </p>
+        </div>
+        <div class="reading-guide-grid">
+            <article>
+                <span>01</span>
+                <h3>Distribución</h3>
+                <p>El ranking de municipios permite reconocer dónde se acumulan los prestadores y qué zonas tienen una presencia menor.</p>
+            </article>
+            <article>
+                <span>02</span>
+                <h3>Participación</h3>
+                <p>El gráfico por departamento convierte los conteos en porcentajes para comparar territorios de distinto tamaño.</p>
+            </article>
+            <article>
+                <span>03</span>
+                <h3>Diferencias y perfiles</h3>
+                <p>El cruce con categoría revela concentraciones y posibles especializaciones de la oferta turística.</p>
+            </article>
+        </div>
+    </section>
+
+    {% if datos.hay_datos %}
+    <section class="territorial-section-heading">
+        <div>
+            <span class="territorial-kicker">Lectura 01 · Distribución</span>
+            <h2>¿Dónde se concentra la oferta?</h2>
+        </div>
+        <p>Los territorios con más registros muestran el núcleo de actividad turística formal.</p>
+    </section>
+
+    <section class="territorial-chart-card chart-wide">
+        <div class="chart-card-header">
+            <div>
+                <span class="chart-index">01</span>
+                <h3>Municipios con mayor cantidad de prestadores</h3>
+            </div>
+            <p>Ordena los diez territorios con más registros para identificar el núcleo y la periferia de la oferta.</p>
+        </div>
+        <div class="contenedor-grafica grafica-municipios"><canvas id="municipiosChart"></canvas></div>
+    </section>
+
+    <section class="territorial-section-heading compact-heading">
+        <div>
+            <span class="territorial-kicker">Lectura 02 · Participación y diferencias</span>
+            <h2>¿Qué peso tiene cada territorio?</h2>
+        </div>
+        <p>{{ datos.departamento_top }} reúne el {{ datos.porcentaje_depto_top }}% de los registros filtrados.</p>
+    </section>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <section class="territorial-chart-card h-100">
+                <div class="chart-card-header">
+                    <div><span class="chart-index">02</span><h3>Participación por departamento</h3></div>
+                    <p>Permite comparar la participación relativa de cada departamento dentro del conjunto filtrado.</p>
+                </div>
+                <div class="contenedor-grafica grafica-departamento"><canvas id="departamentoChart"></canvas></div>
+            </section>
+        </div>
+        <div class="col-lg-7">
+            <section class="territorial-chart-card h-100">
+                <div class="chart-card-header">
+                    <div><span class="chart-index">03</span><h3>Perfil turístico por municipio</h3></div>
+                    <p>Las barras apiladas muestran diferencias de categoría y posibles perfiles de cada municipio.</p>
+                </div>
+                <div class="contenedor-grafica grafica-cruce"><canvas id="cruceChart"></canvas></div>
+            </section>
+        </div>
+    </div>
+
+    <section class="territorial-table-card">
+        <div class="table-card-heading">
+            <div>
+                <span class="territorial-kicker">Detalle verificable</span>
+                <h2>Municipios con mayor presencia</h2>
+            </div>
+            <p>La tabla permite comprobar los valores del ranking y su categoría predominante.</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm align-middle territorial-summary-table">
+                <thead>
+                    <tr><th>#</th><th>Municipio</th><th>Registros</th><th>Participación</th><th>Categoría predominante</th></tr>
+                </thead>
+                <tbody>
+                    {% for municipio in datos.municipios_tabla %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td><strong>{{ municipio.municipio }}</strong></td>
+                        <td>{{ "{:,}".format(municipio.cantidad).replace(",", ".") }}</td>
+                        <td>{{ municipio.porcentaje }}%</td>
+                        <td><span class="category-pill">{{ municipio.categoria }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    {% else %}
+    <section class="territorial-empty-state">
+        <span class="territorial-kicker">Sin coincidencias</span>
+        <h2>No hay registros para esta combinación de filtros</h2>
+        <p>Prueba con otro departamento o categoría para volver a comparar territorios.</p>
+        <a class="btn btn-territorial" href="/territorial">Volver a la vista general</a>
+    </section>
+    {% endif %}
+
+    {% if datos.hay_datos %}
+    <section class="territorial-findings">
+        <div>
+            <span class="territorial-kicker">Lectura 03 · Hallazgos</span>
+            <h2>Lo que cuenta el mapa de registros</h2>
+        </div>
+        <div class="finding-grid">
+            <article>
+                <span>01</span>
+                <h3>Concentración</h3>
+                <p><strong>{{ datos.municipio_top }}</strong> lidera con el {{ datos.porcentaje_municipio_top }}% y el top 3 acumula {{ datos.concentracion_top3 }}%.</p>
+            </article>
+            <article>
+                <span>02</span>
+                <h3>Brecha territorial</h3>
+                <p><strong>{{ datos.municipio_menor }}</strong> registra la menor presencia observada, con {{ datos.cantidad_municipio_menor }} registro(s).</p>
+            </article>
+            <article>
+                <span>03</span>
+                <h3>Comportamientos particulares</h3>
+                <p>El cruce municipio y categoría muestra si cada zona se orienta a alojamiento, agencias u otros servicios.</p>
+            </article>
+        </div>
+    </section>
+    {% endif %}
+
+    <aside class="territorial-note">
+        <strong>Nota de interpretación</strong>
+        <p class="mb-0">Bogotá D.C. incluye localidades como Usaquén, Suba, Engativá y Fontibón tratadas como municipios. La comparación describe registros formales, no la totalidad de la oferta turística real.</p>
+    </aside>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+{% if datos.hay_datos %}
+<script>
+    const municipios = {{ datos.municipios_grafica | tojson }};
+    const deptos     = {{ datos.deptos_grafica | tojson }};
+    const cruceMun   = {{ datos.municipios_cruce | tojson }};
+    const cruceCat   = {{ datos.categorias_unicas | tojson }};
+    const cruceData  = {{ datos.datos_cruce | tojson }};
+
+    new Chart(document.getElementById("municipiosChart"), {
+        type: "bar",
+        data: {
+            labels: municipios.map(x => x.municipio),
+            datasets: [{ label: "Registros", data: municipios.map(x => x.cantidad) }]
+        },
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { beginAtZero: true, title: { display: true, text: "Registros" } },
+                y: { ticks: { autoSkip: false, font: { size: 11 } } }
+            }
+        }
+    });
+
+    new Chart(document.getElementById("departamentoChart"), {
+        type: "doughnut",
+        data: {
+            labels: deptos.map(x => x.departamento),
+            datasets: [{ data: deptos.map(x => x.porcentaje) }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: "bottom" },
+                tooltip: { callbacks: {
+                    label: ctx => ctx.label + ": " + ctx.parsed.toFixed(2) + "%"
+                }}
+            }
+        }
+    });
+
+    const colores = [
+        "#0d6efd", "#198754", "#ffc107", "#dc3545",
+        "#6f42c1", "#20c997", "#fd7e14", "#6610f2"
+    ];
+
+    new Chart(document.getElementById("cruceChart"), {
+        type: "bar",
+        data: {
+            labels: cruceMun,
+            datasets: cruceCat.map((cat, i) => ({
+                label: cat,
+                data: cruceData[cat],
+                backgroundColor: colores[i % colores.length]
+            }))
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: "bottom", labels: { font: { size: 10 } } } },
+            scales: {
+                x: { stacked: true, ticks: { autoSkip: false, font: { size: 10 } } },
+                y: { stacked: true, beginAtZero: true }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

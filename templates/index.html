@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Turismo en Cundinamarca{% endblock %}
+
+{% block content %}
+<div class="index-page">
+<div class="hero-turismo">
+    <span class="badge-hero">Bogotá D.C. · Cundinamarca</span>
+
+    <h1 class="display-6 mb-3">
+        Análisis exploratorio del Registro Nacional de Turismo
+    </h1>
+
+    <p class="lead mb-2">
+        Población analizada:
+        <strong>prestadores turísticos registrados</strong>
+        en Bogotá D.C. y Cundinamarca.
+    </p>
+
+    <p class="mb-0 hero-texto">
+        Cuatro dimensiones para entender cómo se compone, distribuye y
+        comporta la oferta turística formal del territorio.
+    </p>
+</div>
+
+<section class="project-snapshot mb-5">
+    <div class="snapshot-copy">
+        <span class="summary-kicker">Resumen ejecutivo</span>
+        <h2>Una lectura territorial de la oferta turística formal</h2>
+        <p>
+            El proyecto organiza 11 variables del Registro Nacional de Turismo
+            para diagnosticar cómo se compone, distribuye y transforma la oferta
+            registrada en Bogotá D.C. y Cundinamarca.
+        </p>
+        <div class="snapshot-context">
+            <div><span>Objetivo</span><strong>Encontrar patrones útiles para comparar territorios y prestadores.</strong></div>
+            <div><span>Enfoque</span><strong>Cuatro miradas conectadas: población, territorio, tiempo y relaciones.</strong></div>
+        </div>
+    </div>
+    <div class="snapshot-data">
+        <div class="snapshot-stat"><strong>4</strong><span>dimensiones</span></div>
+        <div class="snapshot-stat"><strong>11</strong><span>variables</span></div>
+        <div class="snapshot-stat"><strong>2</strong><span>territorios</span></div>
+        <div class="snapshot-source"><span>Fuente y entidad</span><strong>datos.gov.co · MinCIT</strong><small>Portal Nacional de Datos Abiertos</small></div>
+    </div>
+</section>
+
+<section class="dimensions-section mb-5">
+    <div class="section-header dimensions-heading">
+        <div><span class="summary-kicker">Ruta de análisis</span><h2 class="mb-0 fw-bold">Cuatro dimensiones, una lectura conectada</h2></div>
+        <p>El recorrido pasa de las características de la población al territorio, el tiempo y sus relaciones.</p>
+    </div>
+
+<div class="dimensions-grid">
+
+    <!-- 01 · POBLACIONAL · Esfera / orbe -->
+    <div class="dimension-node node-poblacional">
+        <div class="card card-dimension poblacional h-100">
+            <span class="shape-3d-layer" aria-hidden="true"></span>
+            <div class="card-body d-flex flex-column">
+                <span class="icono-dim">01</span>
+                <h5 class="card-title">Poblacional</h5>
+                <p class="card-text small flex-grow-1">
+                    ¿Cómo está compuesta y distribuida la población turística
+                    según sus principales características?
+                </p>
+                <div class="grupo-trabajo">
+                    <span>Integrante 1</span>
+                    <strong>Laura Bautista</strong>
+                </div>
+                <a href="/poblacional" class="btn btn-outline-primary btn-sm mt-3">
+                    Ver dimensión →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 02 · TERRITORIAL · Cubo / prisma -->
+    <div class="dimension-node node-territorial">
+        <div class="card card-dimension territorial h-100">
+            <span class="shape-3d-layer" aria-hidden="true"></span>
+            <div class="card-body d-flex flex-column">
+                <span class="icono-dim">02</span>
+                <h5 class="card-title">Territorial</h5>
+                <p class="card-text small flex-grow-1">
+                    ¿Cómo se distribuye la población entre departamentos y
+                    municipios, y qué diferencias se identifican?
+                </p>
+                <div class="grupo-trabajo">
+                    <span>Integrante 2</span>
+                    <strong>Nicolás Gutiérrez</strong>
+                </div>
+                <a href="/territorial" class="btn btn-outline-success btn-sm mt-3">
+                    Ver dimensión →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 03 · TEMPORAL · Pirámide / prisma inclinado -->
+    <div class="dimension-node node-temporal">
+        <div class="card card-dimension temporal h-100">
+            <span class="shape-3d-layer" aria-hidden="true"></span>
+            <div class="card-body d-flex flex-column">
+                <span class="icono-dim">03</span>
+                <h5 class="card-title">Temporal</h5>
+                <p class="card-text small flex-grow-1">
+                    ¿Cómo ha cambiado el comportamiento de la población
+                    durante el periodo disponible?
+                </p>
+                <div class="grupo-trabajo">
+                    <span>Integrante 3</span>
+                    <strong>Leonardo Moscoso</strong>
+                </div>
+                <a href="/temporal" class="btn btn-outline-warning btn-sm mt-3">
+                    Ver dimensión →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 04 · MULTIVARIADA · Poliedro / diamante -->
+    <div class="dimension-node node-multivariada">
+        <div class="card card-dimension multivariada h-100">
+            <span class="shape-3d-layer" aria-hidden="true"></span>
+            <div class="card-body d-flex flex-column">
+                <span class="icono-dim">04</span>
+                <h5 class="card-title">Relacional y multivariada</h5>
+                <p class="card-text small flex-grow-1">
+                    ¿Qué relaciones o diferencias evidentes surgen al analizar
+                    tres o más variables al mismo tiempo?
+                </p>
+                <div class="grupo-trabajo">
+                    <span>Integrante 4</span>
+                    <strong>Andrés Pineda</strong>
+                </div>
+                <a href="/multivariada" class="btn btn-outline-danger btn-sm mt-3">
+                    Ver dimensión →
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</section>
+
+
+<!-- ============================= -->
+<!-- VARIABLES DEL DATASET        -->
+<!-- ============================= -->
+<div class="card panel-dataset shadow-sm mb-5">
+    <div class="panel-dataset-header">
+        <div>
+            
+            <h4 class="mb-0">Variables del conjunto de datos</h4>
+            <p class="panel-dataset-intro mb-0">
+                El contenido de esta tabla sostiene la información usada en las cuatro dimensiones del análisis.
+            </p>
+        </div>
+    </div>
+
+    <div class="card-body pt-0">
+        <div class="tabla-leyenda" aria-label="Tipos de variables">
+            <span class="leyenda-categoria">Categórica</span>
+            <span class="leyenda-numerica">Numérica</span>
+            <span class="leyenda-temporal">Temporal</span>
+        </div>
+        <div class="tabla-variables-wrapper">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle tabla-variables">
+                    <thead>
+                        <tr>
+                            <th>Variable</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>ESTADO</code></td>              <td class="tipo-categorica">Categórica</td> <td>Estado del registro</td></tr>
+                        <tr><td><code>DEPARTAMENTO</code></td>        <td class="tipo-categorica">Categórica</td> <td>Departamento del prestador</td></tr>
+                        <tr><td><code>CODIGO_DEPARTAMENTO</code></td> <td class="tipo-numerica">Numérica</td>   <td>Código DANE departamento</td></tr>
+                        <tr><td><code>MUNICIPIO</code></td>           <td class="tipo-categorica">Categórica</td> <td>Municipio del prestador</td></tr>
+                        <tr><td><code>CODIGO_MUNICIPIO</code></td>    <td class="tipo-numerica">Numérica</td>   <td>Código DANE municipio</td></tr>
+                        <tr><td><code>CATEGORIA</code></td>           <td class="tipo-categorica">Categórica</td> <td>Tipo de prestador turístico</td></tr>
+                        <tr><td><code>SUB_CATEGORIA</code></td>       <td class="tipo-categorica">Categórica</td> <td>Subtipo del prestador</td></tr>
+                        <tr><td><code>NUMERO_HABITACIONES</code></td> <td class="tipo-numerica">Numérica</td>   <td>Habitaciones disponibles</td></tr>
+                        <tr><td><code>NUMERO_CAMAS</code></td>        <td class="tipo-numerica">Numérica</td>   <td>Camas disponibles</td></tr>
+                        <tr><td><code>NUMERO_EMPLEADOS</code></td>    <td class="tipo-numerica">Numérica</td>   <td>Empleados del prestador</td></tr>
+                        <tr><td><code>ANIO</code></td>                <td class="tipo-temporal">Temporal</td>   <td>Año del registro</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ============================= -->
+<!-- ENLACES EXTERNOS             -->
+<!-- ============================= -->
+<div class="alert alert-info d-flex flex-column flex-md-row justify-content-between gap-3 mb-0">
+
+    <div>
+        <h6 class="mb-1">Conjunto de datos original</h6>
+        <a href="https://datos.gov.co/browse?sortBy=newest&pageSize=20&limitTo=datasets"
+           target="_blank" class="small">
+            Portal Nacional de Datos Abiertos de Colombia
+        </a>
+    </div>
+
+    <div>
+        <h6 class="mb-1">Repositorio del proyecto</h6>
+        <a href="https://github.com/laurabauva/analisis-turismo-cundinamarca.git"
+           target="_blank" class="small">
+            Ver en GitHub
+        </a>
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}
