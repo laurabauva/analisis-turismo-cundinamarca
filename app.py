@@ -214,13 +214,128 @@ def territorial():
 
 
 # =====================================
-# DIMENSIÓN TEMPORAL  (Integrante 3)
+# DIMENSIÓN TEMPORAL  Cristian Moscoso Integrante 3
 # =====================================
 @app.route('/temporal')
 def temporal():
-    # ⚠️ El Integrante 3 debe completar esta ruta.
-    # Por ahora solo renderiza la plantilla.
-    return render_template('temporal.html')
+    df = cargar_datos()
+    df = df.copy()
+    df['ANIO'] = pd.to_numeric(df['ANIO'], errors='coerce')
+    df = df.dropna(subset=['ANIO']).copy()
+    df['ANIO'] = df['ANIO'].astype(int)
+
+    if df.empty:
+        datos = {
+            'anio_max': '—',
+            'anio_min': '—',
+            'anio_max_total': 0,
+            'anio_min_total': 0,
+            'promedio_anual': 0,
+            'variacion_total': 0,
+            'tendencia': 'No hay datos para analizar en el rango disponible.',
+            'resumen': 'No se encontraron registros con año válido para construir la línea de tiempo.',
+            'conclusion': 'El conjunto de datos no presenta información suficiente para describir cambios temporales.',
+            'evolucion': [],
+            'variacion': [],
+            'top_categorias': [],
+            'estado_trend': [],
+            'categoria_reciente': []
+        }
+        return render_template('temporal.html', datos=datos)
+
+    conteo_anual = df.groupby('ANIO').size().sort_index()
+    anios = [int(a) for a in conteo_anual.index.tolist()]
+    cantidades = [int(v) for v in conteo_anual.values.tolist()]
+
+    anio_max = int(conteo_anual.idxmax())
+    anio_max_total = int(conteo_anual.max())
+    anio_min = int(conteo_anual.idxmin())
+    anio_min_total = int(conteo_anual.min())
+    promedio_anual = round(float(conteo_anual.mean()), 1)
+
+    primer_anio = cantidades[0] if cantidades else 0
+    ultimo_anio = cantidades[-1] if cantidades else 0
+    variacion_total = round(((ultimo_anio - primer_anio) / primer_anio * 100), 1) if primer_anio else 0
+
+    if variacion_total > 0:
+        tendencia = f'La actividad creció un {variacion_total}% entre {anios[0]} y {anios[-1]}.'
+    elif variacion_total < 0:
+        tendencia = f'La actividad cayó un {abs(variacion_total)}% entre {anios[0]} y {anios[-1]}.'
+    else:
+        tendencia = f'La actividad se mantuvo estable entre {anios[0]} y {anios[-1]}.'
+
+    evolucion = []
+    variacion = []
+    for i, anio in enumerate(anios):
+        cantidad = cantidades[i]
+        variacion_periodo = 0
+        if i > 0:
+            anterior = cantidades[i - 1]
+            variacion_periodo = round(((cantidad - anterior) / anterior) * 100, 1) if anterior else 0
+        evolucion.append({
+            'anio': anio,
+            'cantidad': cantidad,
+            'porcentaje': round((cantidad / sum(cantidades)) * 100, 2) if sum(cantidades) else 0
+        })
+        variacion.append({
+            'anio': anio,
+            'variacion': variacion_periodo
+        })
+
+    categorias_total = df['CATEGORIA'].value_counts().head(5)
+    top_categorias = [
+        {'categoria': cat, 'cantidad': int(cant), 'porcentaje': round((cant / len(df)) * 100, 2) if len(df) else 0}
+        for cat, cant in categorias_total.items()
+    ]
+
+    categoria_reciente = (
+        df[df['ANIO'] == anios[-1]].groupby('CATEGORIA').size().sort_values(ascending=False).head(5)
+    )
+    categoria_reciente = [
+        {'categoria': categoria, 'cantidad': int(cantidad), 'porcentaje': round((cantidad / len(df[df['ANIO'] == anios[-1]])) * 100, 2) if len(df[df['ANIO'] == anios[-1]]) else 0}
+        for categoria, cantidad in categoria_reciente.items()
+    ]
+
+    estado_trend = [
+        {'estado': estado, 'cantidad': int(cantidad)}
+        for estado, cantidad in df['ESTADO'].value_counts().items()
+    ]
+
+    resumen = (
+        f'En el rango analizado, el conjunto registró {sum(cantidades):,} observaciones entre {anios[0]} y {anios[-1]}. '
+        f'El año más fuerte fue {anio_max} con {anio_max_total:,} registros, mientras que {anio_min} fue el más bajo con {anio_min_total:,}. '
+        f'La media anual fue de {promedio_anual:,.1f} registros por año.'
+    )
+
+    conclusion = (
+        f'El comportamiento se puede resumir en un crecimiento o ajuste gradual de la actividad turística en el tiempo. '
+        f'En la práctica, esto sugiere que la oferta no se mantiene estática: cambia su intensidad según el año, '
+        f'lo que puede estar relacionado con la demanda, la apertura de nuevos prestadores o cambios en la forma en que se reporta la actividad.'
+    )
+
+    datos = {
+        'anio_max': anio_max,
+        'anio_min': anio_min,
+        'anio_max_total': anio_max_total,
+        'anio_min_total': anio_min_total,
+        'promedio_anual': promedio_anual,
+        'variacion_total': variacion_total,
+        'tendencia': tendencia,
+        'resumen': resumen,
+        'conclusion': conclusion,
+        'evolucion': evolucion,
+        'variacion': variacion,
+        'top_categorias': top_categorias,
+        'estado_trend': estado_trend,
+        'categoria_reciente': categoria_reciente,
+        'anios': anios,
+        'cantidades': cantidades,
+        'anio_inicial': anios[0],
+        'anio_final': anios[-1],
+        'total_registros': int(sum(cantidades))
+    }
+
+    return render_template('temporal.html', datos=datos)
 
 
 # =====================================

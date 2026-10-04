@@ -4,140 +4,353 @@
 
 {% block head %}
 <style>
-    .grafica-evolucion { height: 520px; }
-    .grafica-anual     { height: 480px; }
-    .grafica-periodos  { height: 480px; }
-    .contenedor-grafica { position: relative; width: 100%; }
-
+    .temporal-wrap {
+        padding-top: 1rem;
+        background: linear-gradient(180deg, rgba(255, 214, 102, 0.18) 0%, rgba(255, 248, 220, 0.9) 100%);
+        border-radius: 1.4rem;
+        padding: 1.25rem;
+    }
+    .temporal-hero {
+        background: linear-gradient(135deg, #fdf4d8, #f9ebbf 60%, #f0d57b 100%);
+        border: 1px solid rgba(146, 110, 26, 0.12);
+        border-radius: 1.25rem;
+        padding: 2rem;
+        box-shadow: 0 12px 30px rgba(120, 92, 18, 0.08);
+        margin-bottom: 2rem;
+    }
+    .temporal-kicker {
+        display: inline-block;
+        font-size: .72rem;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        font-weight: 800;
+        color: #8a6200;
+        margin-bottom: .8rem;
+    }
+    .temporal-stamp {
+        background: #fffdf4;
+        border-left: 5px solid #d79d00;
+        border-radius: 1rem;
+        padding: 1rem 1.1rem;
+        box-shadow: inset 0 0 0 1px rgba(162, 127, 36, 0.08);
+    }
+    .temporal-stamp span {
+        display: block;
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: .12em;
+        color: #7a5b0b;
+        margin-bottom: .35rem;
+    }
+    .temporal-stamp strong {
+        display: block;
+        font-size: 2rem;
+        margin-bottom: .2rem;
+        color: #1d2736;
+    }
+    .temporal-kpis { margin-bottom: 2rem; }
+    .temporal-kpi {
+        border-radius: 1rem;
+        background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255, 246, 210, 0.92));
+        border: 1px solid rgba(214, 158, 4, 0.22);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
+        padding: 1.2rem 1rem;
+        height: 100%;
+    }
+    .temporal-kpi span {
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .11em;
+        text-transform: uppercase;
+        color: #6b7280;
+        display: block;
+        margin-bottom: .45rem;
+    }
+    .temporal-kpi strong {
+        display: block;
+        font-size: clamp(2rem, 2.3vw, 2.4rem);
+        color: #0f172a;
+        margin-bottom: .2rem;
+    }
+    .temporal-kpi small {
+        color: #475569;
+    }
+    .temporal-card {
+        background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255, 247, 220, 0.96));
+        border: 1px solid rgba(214, 158, 4, 0.18);
+        border-radius: 1rem;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+    .temporal-card h3 {
+        margin-bottom: .6rem;
+        font-size: 1.4rem;
+    }
+    .temporal-card p {
+        color: #475569;
+        margin-bottom: 0;
+        line-height: 1.7;
+    }
+    .stat-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .5rem .8rem;
+        background: #fff7dc;
+        color: #7a5b0b;
+        border: 1px solid rgba(214, 158, 4, 0.25);
+        border-radius: 999px;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .chart-panel {
+        position: relative;
+        width: 100%;
+        min-height: 320px;
+    }
+    .chart-panel canvas { max-height: 360px; }
+    .grafica-evolucion { height: 360px; }
+    .grafica-barras { height: 360px; }
+    .grafica-dona { height: 340px; }
+    .listado-simple {
+        list-style: none; padding-left: 0; margin: 0;
+    }
+    .listado-simple li {
+        background: #fffaf0;
+        border: 1px solid rgba(214, 158, 4, 0.1);
+        border-radius: .8rem;
+        padding: .75rem .9rem;
+        margin-bottom: .6rem;
+    }
+    .listado-simple strong { color: #1d2736; }
     @media (max-width: 768px) {
-        .grafica-evolucion,
-        .grafica-anual,
-        .grafica-periodos { height: 420px; }
+        .temporal-hero { padding: 1.4rem; }
+        .grafica-evolucion, .grafica-barras, .grafica-dona { height: 280px; }
     }
 </style>
 {% endblock %}
 
-
-<!-- ============================================
-     NAVEGACIÓN LATERAL - TEMPORAL (amarillo)
-     ============================================ -->
 {% block navegacion_dimension %}
-
-    <a href="/territorial"
-       class="nav-lateral nav-lateral-izq"
-       style="background:#ffc107; color:#212529;"
-       title="Ir a: Dimensión territorial">
-        &#8592;
-    </a>
-
-    <button type="button"
-            class="nav-info"
-            style="background:#ffc107; color:#212529;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalDimension"
-            title="Información de esta dimensión">
-        i
-    </button>
-
-    <a href="/multivariada"
-       class="nav-lateral nav-lateral-der"
-       style="background:#ffc107; color:#212529;"
-       title="Ir a: Dimensión relacional y multivariada">
-        &#8594;
-    </a>
-
+    <a href="/territorial" class="nav-lateral nav-lateral-izq" style="background:#ffc107; color:#212529;" title="Ir a: Dimensión territorial">&#8592;</a>
+    <button type="button" class="nav-info" style="background:#ffc107; color:#212529;" data-bs-toggle="modal" data-bs-target="#modalDimension" title="Información de esta dimensión">i</button>
+    <a href="/multivariada" class="nav-lateral nav-lateral-der" style="background:#ffc107; color:#212529;" title="Ir a: Dimensión relacional y multivariada">&#8594;</a>
 {% endblock %}
 
-
-<!-- ============================================
-     MODAL DE INFORMACIÓN
-     ============================================ -->
 {% block modal_info %}
 <div class="modal fade" id="modalDimension" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-
             <div class="modal-header bg-warning">
                 <h5 class="modal-title">Dimensión temporal</h5>
-                <button type="button" class="btn-close"
-                        data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
             <div class="modal-body">
-                <p><strong>Pregunta:</strong>
-                    ¿Cómo ha cambiado el comportamiento de la población
-                    durante el periodo disponible?
-                </p>
-
-                <p><strong>Variables utilizadas:</strong></p>
+                <p><strong>Pregunta:</strong> ¿Cómo ha cambiado el comportamiento de la población durante el periodo disponible?</p>
+                <p><strong>Variables clave:</strong></p>
                 <ul>
                     <li><code>ANIO</code></li>
                     <li><code>CATEGORIA</code></li>
                     <li><code>ESTADO</code></li>
                 </ul>
-
-                <p><strong>Indicadores:</strong></p>
+                <p><strong>Qué se observa:</strong></p>
                 <ul>
-                    <li>Año con mayor cantidad de registros</li>
-                    <li>Año con menor cantidad de registros</li>
-                    <li>Variación porcentual entre periodos</li>
+                    <li>Crecimiento o descenso a lo largo del tiempo</li>
+                    <li>Comportamiento por año y por categoría</li>
+                    <li>Patrones generales para entender la evolución</li>
                 </ul>
-
-                <p class="mb-0"><strong>Filtros disponibles:</strong>
-                    Próximamente.
-                </p>
             </div>
-
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm"
-                        data-bs-dismiss="modal">
-                    Cerrar
-                </button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
             </div>
-
         </div>
     </div>
 </div>
 {% endblock %}
 
-
 {% block content %}
+<div class="temporal-wrap">
+    <section class="temporal-hero row align-items-center g-4">
+        <div class="col-lg-8">
+            <span class="temporal-kicker">Dimensión asignada · Temporal</span>
+            <h1 class="mb-3">¿Cómo ha cambiado la actividad turística en el tiempo?</h1>
+            <p class="lead mb-0">Una mirada sencilla al comportamiento de la población registrada durante el rango disponible en los datos.</p>
+        </div>
+        <div class="col-lg-4">
+            <div class="temporal-stamp">
+                <span>Periodo analizado</span>
+                <strong>{{ datos.anio_inicial }} - {{ datos.anio_final }}</strong>
+                <small>{{ datos.total_registros }} registros observados</small>
+            </div>
+        </div>
+    </section>
 
-<!-- ENCABEZADO -->
-<div class="mb-4">
-    <h1>Dimensión temporal</h1>
-    <p class="lead">
-        ¿Cómo ha cambiado el comportamiento de la población
-        durante el periodo disponible?
-    </p>
-    <p class="text-muted">
-        Análisis de la evolución anual de los prestadores turísticos
-        registrados.
-    </p>
+    <section class="row g-4 temporal-kpis">
+        <div class="col-md-4">
+            <div class="temporal-kpi">
+                <span>Año con más registros</span>
+                <strong>{{ datos.anio_max }}</strong>
+                <small>{{ datos.anio_max_total }} registros</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="temporal-kpi">
+                <span>Año con menos registros</span>
+                <strong>{{ datos.anio_min }}</strong>
+                <small>{{ datos.anio_min_total }} registros</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="temporal-kpi">
+                <span>Promedio anual</span>
+                <strong>{{ '{:,.1f}'.format(datos.promedio_anual).replace(',', '.') }}</strong>
+                <small>Registros por año</small>
+            </div>
+        </div>
+    </section>
+
+    <section class="temporal-card">
+        <div class="stat-pill">📈 Tendencia general</div>
+        <h3>Lo más importante en una frase</h3>
+        <p>{{ datos.tendencia }}</p>
+    </section>
+
+    <section class="row g-4 mb-3">
+        <div class="col-lg-8">
+            <div class="temporal-card">
+                <h3>Evolución anual</h3>
+                <div class="chart-panel grafica-evolucion"><canvas id="evolucionChart"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="temporal-card h-100">
+                <h3>Perfil del último año</h3>
+                <div class="chart-panel grafica-dona"><canvas id="categoriaChart"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="row g-4 mb-3">
+        <div class="col-lg-7">
+            <div class="temporal-card">
+                <h3>Cambio año a año</h3>
+                <div class="chart-panel grafica-barras"><canvas id="variacionChart"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="temporal-card">
+                <h3>Distribución por estado</h3>
+                <div class="chart-panel grafica-dona"><canvas id="estadoChart"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="temporal-card">
+        <h3>Qué nos dice este comportamiento</h3>
+        <p>{{ datos.resumen }}</p>
+        <div class="mt-3">
+            <ul class="listado-simple">
+                {% for item in datos.top_categorias[:3] %}
+                <li><strong>{{ item.categoria }}</strong> fue la categoría más representativa en el conjunto, con {{ item.cantidad }} registros.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <section class="temporal-card">
+        <h3>Conclusión</h3>
+        <p>{{ datos.conclusion }}</p>
+        <p class="mt-3">El análisis sugiere que la actividad turística registrada no se comporta de manera uniforme a lo largo del tiempo, sino que presenta momentos de crecimiento, estabilidad y ajustes importantes según cada año. Esto indica que la oferta turística del territorio está influenciada por cambios en la dinámica económica, la operación de prestadores y la forma como se consolida la actividad turística en la región. En términos prácticos, la tendencia temporal permite reconocer cuándo la actividad fue más fuerte, cuándo hubo una desaceleración y qué tipo de comportamiento predominó en cada periodo.</p>
+        <p class="mt-2">A partir de estas variaciones, se puede concluir que la evolución del sector no depende solo del paso del tiempo, sino también de la interacción entre la demanda, la permanencia de los prestadores y la capacidad del territorio para sostener y atraer actividad turística. Por eso, este estudio temporal es útil para entender no solo cuánto se registró en cada año, sino también cómo cambió la estructura general del turismo en Cundinamarca durante el periodo analizado.</p>
+    </section>
 </div>
+{% endblock %}
 
-<!-- INDICADORES -->
-<div class="row g-4 mb-5">
+{% block scripts %}
+<script>
+  const evolucionData = {{ datos.evolucion|tojson|safe }};
+  const variacionData = {{ datos.variacion|tojson|safe }};
+  const categoriaData = {{ datos.categoria_reciente|tojson|safe }};
+  const estadoData = {{ datos.estado_trend|tojson|safe }};
 
-    <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body text-center">
-                <h6 class="text-muted">Año con más registros</h6>
-                <h2 class="fw-bold">{{ datos.anio_max if datos is defined else '—' }}</h2>
-                <p class="mb-0">Pico de la serie</p>
-            </div>
-        </div>
-    </div>
+  new Chart(document.getElementById('evolucionChart'), {
+    type: 'line',
+    data: {
+      labels: evolucionData.map(item => item.anio),
+      datasets: [{
+        label: 'Registros por año',
+        data: evolucionData.map(item => item.cantidad),
+        borderColor: '#d79d00',
+        backgroundColor: 'rgba(215, 157, 0, 0.12)',
+        tension: 0.35,
+        borderWidth: 3,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#b57c00'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: false, ticks: { precision: 0 } }
+      }
+    }
+  });
 
-    <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body text-center">
-                <h6 class="text-muted">Año con menos registros</h6>
-                <h2 class="fw-bold">{{ datos.anio_min if datos is defined else '—' }}</h2>
-                <p class="mb-0">Valle de la serie</p>
-            </div>
-        </div>
-    </div>
+  new Chart(document.getElementById('variacionChart'), {
+    type: 'bar',
+    data: {
+      labels: variacionData.map(item => item.anio),
+      datasets: [{
+        label: 'Cambio anual (%)',
+        data: variacionData.map(item => item.variacion),
+        backgroundColor: variacionData.map(item => item.variacion >= 0 ? '#d79d00' : '#8fa8b3'),
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: false, ticks: { callback: value => value + '%' } }
+      }
+    }
+  });
 
-    <div class="col-md-4">
-        <div class="card shadow-sm h-
+  new Chart(document.getElementById('categoriaChart'), {
+    type: 'doughnut',
+    data: {
+      labels: categoriaData.map(item => item.categoria),
+      datasets: [{
+        data: categoriaData.map(item => item.cantidad),
+        backgroundColor: ['#d79d00', '#e7c255', '#f2d97a', '#b6cfe2', '#7d8f9f']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+
+  new Chart(document.getElementById('estadoChart'), {
+    type: 'pie',
+    data: {
+      labels: estadoData.map(item => item.estado),
+      datasets: [{
+        data: estadoData.map(item => item.cantidad),
+        backgroundColor: ['#d79d00', '#7aa5b5', '#b6cfe2', '#f0d57b']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+</script>
+{% endblock %}
