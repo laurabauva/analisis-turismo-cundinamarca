@@ -338,48 +338,59 @@ def temporal():
     return render_template('temporal.html', datos=datos)
 
 
-# =====================================
-# DIMENSIÓN MULTIVARIADA  (Integrante 4)
-# =====================================
-@app.route('/multivariada')
-def multivariada():
-    # ⚠️ El Integrante 4 debe completar esta ruta.
-    # Por ahora solo renderiza la plantilla.
-    return render_template('multivariada.html')
-
-
-# =====================================
-# EJECUCIÓN
-# =====================================
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
-
-    # --- RUTA Y API: DIMENSIÓN RELACIONAL ---
+# =========================================================
+# DIMENSIÓN RELACIONAL - MULTIVARIADA
+# =========================================================
 @app.route('/relacional')
 def relacional():
+    return render_template('relacional.html')
+
+@app.route('/multivariada')
+def multivariada():
     return render_template('relacional.html')
 
 @app.route('/api/relacional')
 def api_relacional():
     try:
-        # Cargar datos del RNT
-        df = pd.read_csv('data/rnt_cundinamarca.csv')
-        
-        # Agrupación relacional: Top 10 municipios con más variedad de categorías
+        sin_bogota = request.args.get('sin_bogota', 'false').lower() == 'true'
+
+        try:
+            df = pd.read_csv('data/rnt_cundinamarca.csv', encoding='latin1', sep=None, engine='python', on_bad_lines='skip')
+        except Exception:
+            df = pd.read_csv('data/rnt_cundinamarca.csv', encoding='latin1', sep=';', on_bad_lines='skip')
+
+        # Limpiar espacios en nombres de columna por seguridad
+        df.columns = df.columns.str.strip()
+
+        if sin_bogota:
+            df = df[~df['MUNICIPIO'].astype(str).str.upper().str.contains('BOGOTA|BOGOTÁ')]
+
         top_municipios = df['MUNICIPIO'].value_counts().head(10).index.tolist()
-    
         df_filtrado = df[df['MUNICIPIO'].isin(top_municipios)]
-        
-        # Conteo relacional por Municipio y Categoría
+
+        # Agrupar y obtener las top categorías más relevantes
         relacion = df_filtrado.groupby(['MUNICIPIO', 'CATEGORIA']).size().unstack(fill_value=0)
-        
+
+        # Seleccionar las 8 categorías más representativas para no saturar los colores
+        top_categorias = df_filtrado['CATEGORIA'].value_counts().head(8).index.tolist()
+        relacion = relacion[top_categorias]
+
         datos = {
             "municipios": relacion.index.tolist(),
             "categorias": relacion.columns.tolist(),
-            "matriz": relacion.values.tolist()
+            "matriz": relacion.values.tolist(),
+            "total_registros": int(df_filtrado.shape[0]),
+            "top_municipio": top_municipios[0] if top_municipios else "-"
         }
         return jsonify(datos)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# =========================================================
+# EJECUCIÓN
+# =========================================================
+if __name__ == '__main__':
+    app.run(debug=True)
+
+  
