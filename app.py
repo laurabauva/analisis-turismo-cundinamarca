@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 import pandas as pd
 from pathlib import Path
 
@@ -353,3 +353,33 @@ def multivariada():
 # =====================================
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+    # --- RUTA Y API: DIMENSIÓN RELACIONAL ---
+@app.route('/relacional')
+def relacional():
+    return render_template('relacional.html')
+
+@app.route('/api/relacional')
+def api_relacional():
+    try:
+        # Cargar datos del RNT
+        df = pd.read_csv('data/rnt_cundinamarca.csv')
+        
+        # Agrupación relacional: Top 10 municipios con más variedad de categorías
+        top_municipios = df['MUNICIPIO'].value_counts().head(10).index.tolist()
+    
+        df_filtrado = df[df['MUNICIPIO'].isin(top_municipios)]
+        
+        # Conteo relacional por Municipio y Categoría
+        relacion = df_filtrado.groupby(['MUNICIPIO', 'CATEGORIA']).size().unstack(fill_value=0)
+        
+        datos = {
+            "municipios": relacion.index.tolist(),
+            "categorias": relacion.columns.tolist(),
+            "matriz": relacion.values.tolist()
+        }
+        return jsonify(datos)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
