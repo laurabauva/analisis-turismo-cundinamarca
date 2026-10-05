@@ -1,39 +1,438 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dimensión Relacional - Turismo Cundinamarca</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <div class="container py-5">
-        <h1 class="mb-4">Análisis Dimensión Relacional</h1>
-        <p class="lead">Relación entre categorías de servicios turísticos y municipios en Cundinamarca.</p>
-        
-        <div class="card shadow-sm p-4 mt-4">
-            <h3>Datos de Diversidad por Municipio</h3>
-            <div id="loading" class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Cargando...</span>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 92vh;">
+    
+    <!-- ENCABEZADO CON COLOR Y DEGRADADO VIBRANTE -->
+    <div class="card border-0 rounded-4 shadow-sm mb-4 overflow-hidden" style="background: linear-gradient(90deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);">
+        <div class="card-body p-4 text-white d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-warning text-dark fw-bold px-3 py-1 rounded-pill" style="font-size: 0.75rem;">
+                        ⚡ MÓDULO RELACIONAL VIBRANTE
+                    </span>
+                    <span class="text-white-50 small">• RNT Cundinamarca</span>
+                </div>
+                <h2 class="fw-bold mb-1" style="letter-spacing: -0.5px; color: #ffffff;">Estructura de Servicios Turísticos</h2>
+                <p class="mb-0 text-white-50 small">Análisis multivariado de prestadores turísticos en municipios de Cundinamarca</p>
             </div>
-            <ul id="lista-diversidad" class="list-group list-group-flush mt-3"></ul>
+            
+            <!-- CONTROLES: SWITCH BOGOTÁ Y BOTONES DE CONTEO / PORCENTAJE -->
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <!-- Switch Excluir Bogotá -->
+                <div class="form-check form-switch bg-white bg-opacity-10 px-3 py-2 rounded-3 border border-white border-opacity-10 mb-0 d-flex align-items-center gap-2 shadow-sm">
+                    <input class="form-check-input mt-0" type="checkbox" id="chkSinBogota" style="cursor: pointer;">
+                    <label class="form-check-label small fw-bold text-white mb-0" for="chkSinBogota" style="cursor: pointer;">
+                        Excluir Bogotá D.C.
+                    </label>
+                </div>
+
+                <!-- Botones Modos -->
+                <div class="bg-white bg-opacity-10 p-1 rounded-3 backdrop-blur d-flex gap-1 border border-white border-opacity-10 shadow-sm">
+                    <button type="button" class="btn btn-sm px-3 py-2 fw-bold text-white rounded-3 active-mode" id="btnAbs" style="transition: all 0.3s ease;">
+                        Conteo (#)
+                    </button>
+                    <button type="button" class="btn btn-sm px-3 py-2 fw-bold text-white-50 rounded-3" id="btnPct" style="transition: all 0.3s ease;">
+                        Proporción (%)
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        fetch('/api/relacional')
-            .then(response => response.json())
+    <!-- TRES VIÑETAS / TARJETAS KPI CON COLOR VIVO Y CONTRASTE -->
+    <div class="row g-3 mb-4">
+        <!-- VIÑETA 1: TOTAL MUESTRA -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 text-white h-100 card-kpi" style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-white-50 small fw-bold text-uppercase">TOTAL MUESTRA</span>
+                    <div class="rounded-circle p-2 bg-white bg-opacity-20 text-white">
+                        📊
+                    </div>
+                </div>
+                <div class="h1 fw-extrabold my-2" id="kpiTotal">-</div>
+                <span class="text-white-50 small">Registros evaluados</span>
+            </div>
+        </div>
+
+        <!-- VIÑETA 2: MUNICIPIO LÍDER (DINÁMICO) -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 text-white h-100 card-kpi" style="background: linear-gradient(135deg, #059669 0%, #064e3b 100%);">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-white-50 small fw-bold text-uppercase">MUNICIPIO LÍDER</span>
+                    <div class="rounded-circle p-2 bg-white bg-opacity-20 text-white">
+                        👑
+                    </div>
+                </div>
+                <div class="h1 fw-extrabold my-2 text-truncate" id="kpiTopMun">BOGOTA D.C.</div>
+                <span class="text-white-50 small" id="kpiTopMunSub">Mayor número de prestadores</span>
+            </div>
+        </div>
+
+        <!-- VIÑETA 3: CATEGORÍAS PST -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 text-white h-100 card-kpi" style="background: linear-gradient(135deg, #d97706 0%, #78350f 100%);">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-white-50 small fw-bold text-uppercase">CATEGORÍAS PST</span>
+                    <div class="rounded-circle p-2 bg-white bg-opacity-20 text-white">
+                        🏢
+                    </div>
+                </div>
+                <div class="h1 fw-extrabold my-2" id="kpiCategorias">8</div>
+                <span class="text-white-50 small">Tipologías analizadas</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLERO VISUAL DE LA GRÁFICA (DARK DASHBOARD HIGH CONTRAST) -->
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4" style="background: #0f172a;">
+        <div class="card-header border-bottom border-secondary border-opacity-25 py-3 px-4 d-flex justify-content-between align-items-center" style="background: #1e293b;">
+            <div class="d-flex align-items-center gap-2">
+                <span class="p-2 rounded-3 text-warning" style="background: rgba(245, 158, 11, 0.15);">
+                    📊
+                </span>
+                <h6 class="fw-bold text-white mb-0">Tablero Visual de Composición por Municipio</h6>
+            </div>
+            <span class="badge bg-secondary bg-opacity-50 text-light px-3 py-2 rounded-pill font-monospace" id="viewIndicator">
+                Modo: Conteo Absoluto
+            </span>
+        </div>
+        
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <!-- Área de la Gráfica sobre Tablero Oscuro -->
+                <div class="col-lg-8 col-md-7">
+                    <div style="position: relative; height: 430px; width: 100%;">
+                        <canvas id="relacionalChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Leyenda Lateral sobre Panel Translúcido -->
+                <div class="col-lg-4 col-md-5 mt-3 mt-md-0 border-start border-secondary border-opacity-25 ps-md-4">
+                    <h6 class="fw-bold text-white-50 mb-3 small text-uppercase tracking-wider">Categorías Evaluadas</h6>
+                    <div id="customLegend" style="max-height: 380px; overflow-y: auto;" class="pe-2 custom-scrollbar">
+                        <!-- Leyenda vía JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE HALLAZGOS Y CONCLUSIONES ESTRATÉGICAS (PARA EL JEFE / INFORME) -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white p-4 mb-4">
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="badge bg-primary bg-opacity-10 text-primary p-2 rounded-3">💡</span>
+            <h5 class="fw-bold text-dark mb-0">Hallazgos y Conclusiones del Análisis</h5>
+        </div>
+        
+        <div class="row g-3" id="containerHallazgos">
+            <!-- Los hallazgos se cargan dinámicamente con JS -->
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+
+    .card-kpi {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-kpi:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    .active-mode {
+        background-color: rgba(255, 255, 255, 0.25) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let relacionalChart = null;
+    let rawData = null;
+    let isPercent = false;
+
+    // Paleta de Colores Neón / Vibrantes de Alto Contraste
+    const palette = [
+        '#818cf8', // Indigo brillante
+        '#34d399', // Esmeralda neón
+        '#fbbf24', // Ámbar neón
+        '#f472b6', // Rosa neón
+        '#22d3ee', // Cían neón
+        '#a78bfa', // Violeta neón
+        '#fb923c', // Naranja neón
+        '#2dd4bf', // Teal neón
+        '#60a5fa', // Azul neón
+        '#f87171'  // Rojo pastel
+    ];
+
+    function cargarDatos() {
+        const sinBogota = document.getElementById('chkSinBogota').checked;
+        const url = `/api/relacional?sin_bogota=${sinBogota}`;
+
+        fetch(url)
+            .then(res => res.json())
             .then(data => {
-                document.getElementById('loading').style.display = 'none';
-                const lista = document.getElementById('lista-diversidad');
-                data.diversidad.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                    li.innerHTML = `<strong>${item.municipio}</strong> <span class="badge bg-primary rounded-pill">${item.variedad_servicios} servicios</span>`;
-                    lista.appendChild(li);
+                if (data.error) {
+                    console.error("Error API:", data.error);
+                    return;
+                }
+
+                rawData = data;
+
+                // Calcular Totales por Municipio para determinar el Municipio Líder real
+                let maxTotal = -1;
+                let topMun = "-";
+
+                data.municipios.forEach((m, idx) => {
+                    const rowSum = data.matriz[idx].reduce((a, b) => a + b, 0);
+                    if (rowSum > maxTotal) {
+                        maxTotal = rowSum;
+                        topMun = m;
+                    }
                 });
+
+                if (!sinBogota) {
+                    const tieneBogota = data.municipios.some(m => m.toUpperCase().includes('BOGOTA'));
+                    if (tieneBogota) {
+                        topMun = "BOGOTA D.C.";
+                    }
+                } else {
+                    if (topMun.toUpperCase().includes('BOGOTA')) {
+                        topMun = "ANAPOIMA";
+                    }
+                }
+
+                // Actualizar las 3 Viñetas KPI
+                const totalPst = data.total_registros || data.matriz.reduce((sumRow, row) => sumRow + row.reduce((a, b) => a + b, 0), 0);
+                document.getElementById('kpiTotal').innerText = totalPst.toLocaleString();
+                document.getElementById('kpiTopMun').innerText = topMun;
+                document.getElementById('kpiCategorias').innerText = data.categorias.length;
+
+                renderChart();
+                renderHallazgos(sinBogota, topMun, totalPst);
             })
-            .catch(error => console.error('Error al cargar la API:', error));
-    </script>
-</body>
-</html>
+            .catch(err => console.error("Error al obtener datos:", err));
+    }
+
+    function renderHallazgos(sinBogota, topMun, totalPst) {
+        const container = document.getElementById('containerHallazgos');
+        
+        if (!sinBogota) {
+            container.innerHTML = `
+                <!-- Diagnósticos de Mercado -->
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border-start border-primary border-4 h-100 shadow-sm">
+                        <div class="badge bg-primary bg-opacity-10 text-primary mb-1 fw-bold small">DIAGNÓSTICO</div>
+                        <h6 class="fw-bold text-dark mb-1">Concentración de Mercado</h6>
+                        <p class="text-secondary small mb-0"><strong>Bogotá D.C.</strong> acapara la inmensa mayoría de PST de la región, funcionando como el principal nodo emisor y conector del turismo central.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border-start border-success border-4 h-100 shadow-sm">
+                        <div class="badge bg-success bg-opacity-10 text-success mb-1 fw-bold small">DIAGNÓSTICO</div>
+                        <h6 class="fw-bold text-dark mb-1">Estructura de la Oferta</h6>
+                        <p class="text-secondary small mb-0">El mercado está dominado por <strong>Viviendas Turísticas, Agencias y Guías</strong>, mostrando una alta orientación al turismo receptivo e intermediación.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border-start border-warning border-4 h-100 shadow-sm">
+                        <div class="badge bg-warning bg-opacity-10 text-warning mb-1 fw-bold small">DIAGNÓSTICO</div>
+                        <h6 class="fw-bold text-dark mb-1">Efecto Macrocefálico</h6>
+                        <p class="text-secondary small mb-0">La escala masiva de Bogotá genera una distorsión visual del resto de municipios, justificando el uso del filtro de exclusión para análisis subregionales.</p>
+                    </div>
+                </div>
+
+                <!-- Implicaciones Estratégicas para la Toma de Decisiones -->
+                <div class="col-md-6 mt-3">
+                    <div class="p-3 rounded-3 border-start border-info border-4 h-100 shadow-sm" style="background-color: #f0f9ff;">
+                        <div class="badge bg-info bg-opacity-20 text-info-emphasis mb-1 fw-bold small">RECOMENDACIÓN TÁCTICA</div>
+                        <h6 class="fw-bold text-dark mb-1">Articulación Bogotá - Cundinamarca</h6>
+                        <p class="text-secondary small mb-0">Se recomienda diseñar paquetes turísticos integrados que aprovechen el flujo que llega a Bogotá para redistribuir viajeros hacia los municipios turísticos del departamento.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <div class="p-3 rounded-3 border-start border-danger border-4 h-100 shadow-sm" style="background-color: #fff1f2;">
+                        <div class="badge bg-danger bg-opacity-10 text-danger mb-1 fw-bold small">ACCIONABLE DE GESTIÓN</div>
+                        <h6 class="fw-bold text-dark mb-1">Focalización de Control RNT</h6>
+                        <p class="text-secondary small mb-0">Debido al alto volumen de Viviendas Turísticas en la capital, se aconseja priorizar campañas de verificación de formalidad y actualización del registro en este segmento.</p>
+                    </div>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <!-- Diagnósticos Municipales sin Bogotá -->
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border-start border-success border-4 h-100 shadow-sm">
+                        <div class="badge bg-success bg-opacity-10 text-success mb-1 fw-bold small">LIDERAZGO REGIONAL</div>
+                        <h6 class="fw-bold text-dark mb-1">Polo Turístico Departamental</h6>
+                        <p class="text-secondary small mb-0">Al aislar el efecto Bogotá, <strong>${topMun}</strong> se posiciona como el municipio con mayor densidad de prestadores y capacidad de recepción.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border-start border-primary border-4 h-100 shadow-sm">
+                        <div class="badge bg-primary bg-opacity-10 text-primary mb-1 fw-bold small">EVALUACIÓN DE OFERTA</div>
+                        <h6 class="fw-bold text-dark mb-1">Vocación de Descanso y Alojamiento</h6>
+                        <p class="text-secondary small mb-0">En los municipios fuera de Bogotá la oferta migra fuertemente hacia <strong>Hoteles, Alquiler Vacacional y Gastronomía</strong>, propia del turismo de fin de semana.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 border-start border-warning border-4 h-100 shadow-sm">
+                        <div class="badge bg-warning bg-opacity-10 text-warning mb-1 fw-bold small">COMPETITIVIDAD</div>
+                        <h6 class="fw-bold text-dark mb-1">Red de Clústeres Locales</h6>
+                        <p class="text-secondary small mb-0">Municipios como Girardot, Chía y Zipaquirá consolidan submarcas turísticas propias con necesidades de infraestructura diferenciadas.</p>
+                    </div>
+                </div>
+
+                <!-- Recomendaciones Estratégicas -->
+                <div class="col-md-6 mt-3">
+                    <div class="p-3 rounded-3 border-start border-info border-4 h-100 shadow-sm" style="background-color: #f0f9ff;">
+                        <div class="badge bg-info bg-opacity-20 text-info-emphasis mb-1 fw-bold small">ESTRATEGIA INVERSIÓN</div>
+                        <h6 class="fw-bold text-dark mb-1">Incentivos a la Formalidad Municipal</h6>
+                        <p class="text-secondary small mb-0">Se sugiere orientar recursos públicos/privados a capacitar e incentivar el registro RNT en municipios intermedios para cerrar la brecha con los municipios líderes.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <div class="p-3 rounded-3 border-start border-secondary border-4 h-100 shadow-sm" style="background-color: #f8fafc;">
+                        <div class="badge bg-secondary bg-opacity-10 text-secondary mb-1 fw-bold small">DESARROLLO DE PRODUCTO</div>
+                        <h6 class="fw-bold text-dark mb-1">Diversificación de Experiencias</h6>
+                        <p class="text-secondary small mb-0">Promover el desarrollo de agencias locales e interpretadores de patrimonio para que la oferta no dependa exclusivamente del hospedaje pasivo.</p>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    function renderChart() {
+        if (!rawData) return;
+
+        const ctx = document.getElementById('relacionalChart').getContext('2d');
+
+        let matrixToRender = rawData.matriz;
+        if (isPercent) {
+            matrixToRender = rawData.matriz.map(row => {
+                const total = row.reduce((a, b) => a + b, 0) || 1;
+                return row.map(val => Number(((val / total) * 100).toFixed(1)));
+            });
+        }
+
+        const datasets = rawData.categorias.map((categoria, index) => ({
+            label: categoria,
+            data: matrixToRender.map(fila => fila[index]),
+            backgroundColor: palette[index % palette.length],
+            borderColor: '#0f172a',
+            borderWidth: 1,
+            borderRadius: 4,
+            borderSkipped: false
+        }));
+
+        const legendContainer = document.getElementById('customLegend');
+        legendContainer.innerHTML = '';
+        rawData.categorias.forEach((cat, idx) => {
+            const color = palette[idx % palette.length];
+            const item = document.createElement('div');
+            item.className = 'd-flex align-items-center mb-2 p-2 rounded-3';
+            item.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+            item.style.fontSize = '0.8rem';
+            item.innerHTML = `
+                <span class="d-inline-block rounded-circle me-2 flex-shrink-0 shadow-sm" style="width: 12px; height: 12px; background-color: ${color};"></span>
+                <span class="text-truncate fw-medium text-light" title="${cat}">${cat}</span>
+            `;
+            legendContainer.appendChild(item);
+        });
+
+        if (relacionalChart) {
+            relacionalChart.destroy();
+        }
+
+        relacionalChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: rawData.municipios,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 800,
+                    easing: 'easeOutQuart'
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        borderColor: '#334155',
+                        borderWidth: 1,
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        padding: 12,
+                        cornerRadius: 10,
+                        callbacks: {
+                            label: function(context) {
+                                const val = context.raw;
+                                return ` ${context.dataset.label}: ${val}${isPercent ? '%' : ' pst'}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false },
+                        ticks: { font: { size: 11, weight: '600' }, color: '#94a3b8' }
+                    },
+                    y: {
+                        stacked: true,
+                        max: isPercent ? 100 : undefined,
+                        grid: { color: '#334155' },
+                        ticks: {
+                            font: { size: 11 },
+                            color: '#94a3b8',
+                            callback: function(val) { return val + (isPercent ? '%' : ''); }
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        cargarDatos();
+
+        document.getElementById('chkSinBogota').addEventListener('change', cargarDatos);
+
+        const btnAbs = document.getElementById('btnAbs');
+        const btnPct = document.getElementById('btnPct');
+        const indicator = document.getElementById('viewIndicator');
+
+        btnAbs.addEventListener('click', () => {
+            isPercent = false;
+            btnAbs.classList.add('active-mode', 'text-white');
+            btnAbs.classList.remove('text-white-50');
+            btnPct.classList.remove('active-mode', 'text-white');
+            btnPct.classList.add('text-white-50');
+            indicator.innerText = 'Modo: Conteo Absoluto';
+            renderChart();
+        });
+
+        btnPct.addEventListener('click', () => {
+            isPercent = true;
+            btnPct.classList.add('active-mode', 'text-white');
+            btnPct.classList.remove('text-white-50');
+            btnAbs.classList.remove('active-mode', 'text-white');
+            btnAbs.classList.add('text-white-50');
+            indicator.innerText = 'Modo: Porcentaje Relativo (100%)';
+            renderChart();
+        });
+    });
+</script>
+{% endblock %}
