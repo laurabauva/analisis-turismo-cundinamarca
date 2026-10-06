@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, redirect, render_template, request
 import pandas as pd
 from pathlib import Path
 
@@ -348,7 +348,7 @@ def relacional():
 
 @app.route('/multivariada')
 def multivariada():
-    return render_template('relacional.html')
+    return redirect('/relacional')
 
 @app.route('/api/relacional')
 def api_relacional():
