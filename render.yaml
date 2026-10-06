@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: turismo-cundinamarca
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app
