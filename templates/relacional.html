@@ -26,14 +26,35 @@
             .then(data => {
                 document.getElementById('loading').style.display = 'none';
                 const lista = document.getElementById('lista-diversidad');
-                data.diversidad.forEach(item => {
+                const diversidad = Array.isArray(data.diversidad)
+                    ? data.diversidad
+                    : Array.isArray(data.municipios)
+                        ? data.municipios.map((municipio, index) => ({
+                            municipio,
+                            variedad_servicios: Array.isArray(data.matriz[index])
+                                ? data.matriz[index].filter(valor => Number(valor) > 0).length
+                                : 0
+                        }))
+                        : [];
+
+                if (!diversidad.length) {
+                    lista.innerHTML = '<li class="list-group-item text-muted">No se encontraron datos para mostrar.</li>';
+                    return;
+                }
+
+                diversidad.forEach(item => {
                     const li = document.createElement('li');
                     li.className = 'list-group-item d-flex justify-content-between align-items-center';
                     li.innerHTML = `<strong>${item.municipio}</strong> <span class="badge bg-primary rounded-pill">${item.variedad_servicios} servicios</span>`;
                     lista.appendChild(li);
                 });
             })
-            .catch(error => console.error('Error al cargar la API:', error));
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                const lista = document.getElementById('lista-diversidad');
+                lista.innerHTML = '<li class="list-group-item text-danger">No fue posible cargar la información relacional.</li>';
+                console.error('Error al cargar la API:', error);
+            });
     </script>
 </body>
 </html>

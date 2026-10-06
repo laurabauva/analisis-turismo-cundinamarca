@@ -376,10 +376,20 @@ def api_relacional():
         top_categorias = df_filtrado['CATEGORIA'].value_counts().head(8).index.tolist()
         relacion = relacion[top_categorias]
 
+        diversidad = (
+            df_filtrado.groupby('MUNICIPIO')['CATEGORIA']
+            .nunique()
+            .reset_index(name='variedad_servicios')
+            .sort_values(['variedad_servicios', 'MUNICIPIO'], ascending=[False, True])
+            .rename(columns={'MUNICIPIO': 'municipio'})
+            .to_dict(orient='records')
+        )
+
         datos = {
             "municipios": relacion.index.tolist(),
             "categorias": relacion.columns.tolist(),
             "matriz": relacion.values.tolist(),
+            "diversidad": diversidad,
             "total_registros": int(df_filtrado.shape[0]),
             "top_municipio": top_municipios[0] if top_municipios else "-"
         }
